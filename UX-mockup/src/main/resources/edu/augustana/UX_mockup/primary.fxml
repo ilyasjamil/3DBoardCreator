@@ -7,78 +7,81 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.layout.AnchorPane?>
+
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.augustana.UX_mockup.PrimaryController">
-   <children>
-      <Pane prefHeight="400.0" prefWidth="600.0">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.augustana.UX_mockup.PrimaryController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <Menu mnemonicParsing="false" text="New project">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Preloaded template" />
+                        <MenuItem mnemonicParsing="false" text="Empty board" />
+                    </items>
+                  </Menu>
+                  <MenuItem mnemonicParsing="false" text="Open" />
+                  <MenuItem mnemonicParsing="false" text="save" />
+                  <MenuItem mnemonicParsing="false" text="save as" />
+                  <MenuItem mnemonicParsing="false" text="export" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Preview">
+            <items>
+              <MenuItem fx:id="preview3d" mnemonicParsing="false" onAction="#switchToSecondary" text="preview 3D" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <right>
+      <VBox alignment="CENTER" prefHeight="258.0" prefWidth="106.0" spacing="14.0" BorderPane.alignment="CENTER">
+         <effect>
+            <ColorAdjust saturation="-0.06" />
+         </effect>
+
          <children>
-            <MenuBar prefHeight="29.0" prefWidth="600.0">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                        <Menu mnemonicParsing="false" text="New Project">
-                           <items>
-                              <MenuItem mnemonicParsing="false" text="Preloaded Template" />
-                              <MenuItem mnemonicParsing="false" text="Empty board" />
-                           </items>
-                        </Menu>
-                        <MenuItem mnemonicParsing="false" text="open" />
-                        <MenuItem mnemonicParsing="false" text="save" />
-                        <MenuItem mnemonicParsing="false" text="save as" />
-                        <MenuItem mnemonicParsing="false" text="export" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Preview ">
-                  <items>
-                    <MenuItem fx:id="preview3d" mnemonicParsing="false" onAction="#switchToSecondary" text="Preview 3D" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-            <VBox alignment="TOP_CENTER" layoutX="458.0" layoutY="29.0" prefHeight="259.0" prefWidth="142.0" spacing="10.0">
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
                <children>
-                  <GridPane prefHeight="49.0" prefWidth="142.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="85.0" minWidth="10.0" prefWidth="61.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="72.0" minWidth="10.0" prefWidth="56.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Slider max="10.0" maxHeight="-Infinity" maxWidth="-Infinity" min="1.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="67.0" showTickLabels="true" value="1.0" GridPane.columnIndex="1" />
-                        <Label alignment="TOP_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="71.0" text="Elevation" textAlignment="RIGHT" />
-                     </children>
-                  </GridPane>
-                  <Button alignment="TOP_CENTER" mnemonicParsing="false" text="Add">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </Button>
-                  <Button alignment="CENTER" mnemonicParsing="false" text="Remove">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </Button>
-                  <Button mnemonicParsing="false" text="Undo" />
-                  <Button mnemonicParsing="false" text="Redo" />
+                  <Slider max="10.0" showTickLabels="true" GridPane.columnIndex="1" />
+                  <Label prefHeight="18.0" prefWidth="59.0" text="Elevation" />
                </children>
+            </GridPane>
+            <Button mnemonicParsing="false" text="Add">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
-            </VBox>
+
+            </Button>
+            <Button mnemonicParsing="false" text="Remove" />
+            <Button mnemonicParsing="false" text="Undo" />
+            <Button mnemonicParsing="false" text="Redo" />
          </children>
-      </Pane>
-   </children>
-</AnchorPane>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </VBox>
+   </right>
+   <bottom>
+      <VBox prefHeight="116.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+   </bottom>
+</BorderPane>
