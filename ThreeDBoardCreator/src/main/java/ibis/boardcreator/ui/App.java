@@ -1,4 +1,4 @@
-package edu.augustana.UX_mockup;
+package ibis.boardcreator.ui;
 
 import javafx.application.Application;
 
@@ -18,7 +18,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        scene = new Scene(loadFXML("Main_Editor"), 640, 480);
         stage.setScene(scene);
 
         stage.show();

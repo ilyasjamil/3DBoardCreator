@@ -1,6 +1,6 @@
-package edu.augustana.UX_mockup;
+package ibis.boardcreator.datamodel;
 
-public class Tiles {
+public class Tile {
 	
 	private int xPoint;
 	private int yPoint;
@@ -12,7 +12,7 @@ public class Tiles {
 
 	}
 	
-    public Tiles(int x, int y, int w, int h) {
+    public Tile(int x, int y, int w, int h) {
         
         xPoint = x;    
         yPoint = y;    
