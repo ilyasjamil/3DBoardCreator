@@ -5,11 +5,11 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="471.0" prefWidth="751.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcontroller.ui.SecondaryController">
+<VBox alignment="CENTER" prefHeight="471.0" prefWidth="751.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.ThreeDPreviewController">
     <children>
       <BorderPane prefHeight="460.0" prefWidth="711.0">
          <center>
-              <Button fx:id="secondaryButton" onAction="#switchToPrimary" text="Exit preview" BorderPane.alignment="CENTER" />
+              <Button onAction="#switchToMainEditor" text="Exit preview" BorderPane.alignment="CENTER" />
          </center>
       </BorderPane>
     </children>

@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcontroller.ui.PrimaryController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.MainEditorController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -34,7 +34,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Preview">
             <items>
-              <MenuItem fx:id="preview3d" mnemonicParsing="false" onAction="#switchToSecondary" text="preview 3D" />
+              <MenuItem mnemonicParsing="false" onAction="#switchToThreeDPreview" text="preview 3D" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
