@@ -7,7 +7,6 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
-
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -62,7 +61,10 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Slider max="10.0" showTickLabels="true" GridPane.columnIndex="1" />
+                  <Slider max="10.0" showTickLabels="true" GridPane.columnIndex="1">
+                     <padding>
+                        <Insets right="20.0" />
+                     </padding></Slider>
                   <Label prefHeight="18.0" prefWidth="59.0" text="Elevation" />
                </children>
             </GridPane>
