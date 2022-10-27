@@ -2,22 +2,32 @@ package ibis.boardcreator.datamodel;
 
 public class Tile {
 	
-	private int xPoint;
-	private int yPoint;
-	private int height, width;
+	private int row;
+	private int column;
+	private double elevation;
 	
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-	
-    public Tile(int x, int y, int w, int h) {
+    public Tile(int row, int column,  double elevation) {
         
-        xPoint = x;    
-        yPoint = y;    
-        width = w;     
-        height = h;
+        this.row = row;    
+        this.column = column;    
+        this.elevation = elevation;
     }
+
+	public int getRow() {
+		return row;
+	}
+
+	public int getColumn() {
+		return column;
+	}
+
+    public double getElevation() {
+		return elevation;
+	}
+
+	public void setElevation(double elevation) {
+		this.elevation = elevation;
+	}
+   
 
 }
