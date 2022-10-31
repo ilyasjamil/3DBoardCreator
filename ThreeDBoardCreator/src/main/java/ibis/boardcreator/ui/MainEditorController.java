@@ -9,52 +9,71 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 public class MainEditorController {
 
-	@FXML private Canvas canvasGrid;
-	@FXML private ToggleButton addButton;
-	@FXML private Slider elevationSlider;
-	
+	private final double TILE_SIZE = 50;
+
+	@FXML
+	private Canvas canvasGrid;
+	@FXML
+	private ToggleButton addButton;
+	@FXML
+	private Slider elevationSlider;
+
 	@FXML
 	private void initialize() {
 		
+		drawGrid();
+		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
+	}
+
+	private void drawGrid() {
+		Grid grid = App.getGrid();
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
-	
-		//TODO: store the grid somewhere - we don't want to keep creating new Grid objects
-		Grid grid = new Grid();
-		
-		//TODO: move drawing code into separate method, to make it easy to redraw
-		//      whenever the grid changes
-		
+
 		for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumColumns(); c++) {
 				gc.setStroke(Color.BLACK);
-				double x = c * 50;
-				double y = r * 50;
-				gc.strokeRect(x, y, 50, 50);
+				double x = c * TILE_SIZE;
+				double y = r * TILE_SIZE;
+				gc.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
 				Tile tile = grid.getTileAt(r, c);
-				
+
 				tile.setElevation(elevationSlider.getValue());
 				double elev = tile.getElevation();
 				
-				canvasGrid.setOnMousePressed(evt ->{
-					gc.setFill(Color.GREY);
-					gc.fillRect(evt.getX()-30, evt.getY()-15, 50, 50);
-				});
-				
-				
-				//TODO fillRect using an appropriate color, based on the elevation
-				
+				// TODO fillRect using an appropriate color, based on the elevation
+//				gc.setFill(Color.GREY);
+//				gc.fillRect(x,y, TILE_SIZE, TILE_SIZE);
+
+					
 			}
 		}
+
 	}
-	
-    @FXML
-    private void switchToThreeDPreview() throws IOException {
-        App.setRoot("Three_D_Preview");
-    }
-    
+
+	private void handleCanvasMousePress(MouseEvent evt) {
+		
+
+		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
+		int c = (int) (evt.getX() / TILE_SIZE);
+		int r = (int) (evt.getY() / TILE_SIZE);
+		Tile clickedTile = App.getGrid().getTileAt(r, c);
+		Color color = new Color( 0.52, 0.52, 0.52, elevationSlider.getValue()/10 );
+		gc.setFill(color);
+		gc.fillRect(c * TILE_SIZE ,r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+		clickedTile.setElevation(5);
+		drawGrid();
+
+
+	}
+
+	@FXML
+	private void switchToThreeDPreview() throws IOException {
+		App.setRoot("Three_D_Preview");
+	}
 
 }

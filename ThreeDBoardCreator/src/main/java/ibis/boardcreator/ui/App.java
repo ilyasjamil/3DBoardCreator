@@ -9,14 +9,25 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import ibis.boardcreator.datamodel.Grid;
+
 /**
  * JavaFX App
  */
 public class App extends Application {
 
     private static Scene scene;
+    private static Grid grid = new Grid();
 
-    @Override
+    public static Grid getGrid() {
+		return grid;
+	}
+
+	public static void setGrid(Grid grid) {
+		App.grid = grid;
+	}
+
+	@Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("Main_Editor"), 640, 480);
         stage.setScene(scene);

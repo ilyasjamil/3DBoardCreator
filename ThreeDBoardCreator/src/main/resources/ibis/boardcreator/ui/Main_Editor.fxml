@@ -67,7 +67,7 @@
                      <padding>
                         <Insets right="20.0" />
                      </padding></Slider>
-                  <Label prefHeight="18.0" prefWidth="59.0" text="Elevation" />
+                  <Label prefHeight="18.0" prefWidth="53.0" text="Elevation" />
                </children>
             </GridPane>
             <ToggleButton fx:id="addButton" mnemonicParsing="false" text="Add">
