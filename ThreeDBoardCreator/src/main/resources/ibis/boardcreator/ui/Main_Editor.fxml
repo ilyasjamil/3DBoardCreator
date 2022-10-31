@@ -63,7 +63,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Slider max="10.0" showTickLabels="true" GridPane.columnIndex="1">
+                  <Slider fx:id="elevationSlider" max="10.0" showTickLabels="true" GridPane.columnIndex="1">
                      <padding>
                         <Insets right="20.0" />
                      </padding></Slider>
