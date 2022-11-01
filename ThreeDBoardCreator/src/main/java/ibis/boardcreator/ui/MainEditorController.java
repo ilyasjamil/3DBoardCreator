@@ -22,12 +22,14 @@ public class MainEditorController {
 	private ToggleButton addButton;
 	@FXML
 	private Slider elevationSlider;
+	@FXML
+	private ToggleButton removeButton;
 
 	@FXML
 	private void initialize() {
 		
 		drawGrid();
-		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
+		//canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
 	}
 
 	private void drawGrid() {
@@ -54,8 +56,29 @@ public class MainEditorController {
 		}
 
 	}
+	@FXML
+	private void removeTileAction() throws IOException{
+		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePressRemove(evt));
+	}
+	@FXML
+	private void addTileAction() throws IOException{
+		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePressAdd(evt));
+	}
 
-	private void handleCanvasMousePress(MouseEvent evt) {
+	private void handleCanvasMousePressRemove(MouseEvent evt) {
+		// TODO Auto-generated method stub
+		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
+		int c = (int) (evt.getX() / TILE_SIZE);
+		int r = (int) (evt.getY() / TILE_SIZE);
+		Tile clickedTile = App.getGrid().getTileAt(r, c);
+		clickedTile.setElevation(clickedTile.getElevation()-2);
+		Color color = new Color( 1, 1, 1,  clickedTile.getElevation()/10);
+		gc.setFill(color);
+		gc.fillRect(c * TILE_SIZE ,r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+		drawGrid();
+	}
+
+	private void handleCanvasMousePressAdd(MouseEvent evt) {
 		
 
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
@@ -67,8 +90,6 @@ public class MainEditorController {
 		gc.fillRect(c * TILE_SIZE ,r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 		clickedTile.setElevation(5);
 		drawGrid();
-
-
 	}
 
 	@FXML

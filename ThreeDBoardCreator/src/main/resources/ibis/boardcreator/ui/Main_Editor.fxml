@@ -70,12 +70,12 @@
                   <Label prefHeight="18.0" prefWidth="53.0" text="Elevation" />
                </children>
             </GridPane>
-            <ToggleButton fx:id="addButton" mnemonicParsing="false" text="Add">
+            <ToggleButton fx:id="addButton" mnemonicParsing="false" onAction="#addTileAction" text="Add">
                <toggleGroup>
                   <ToggleGroup fx:id="ToolButtons" />
                </toggleGroup>
             </ToggleButton>
-            <ToggleButton mnemonicParsing="false" text="Remove" toggleGroup="$ToolButtons" />
+            <ToggleButton fx:id="removeButton" mnemonicParsing="false" onAction="#removeTileAction" text="Remove" toggleGroup="$ToolButtons" />
             <ToggleButton mnemonicParsing="false" text="Undo" toggleGroup="$ToolButtons" />
             <ToggleButton mnemonicParsing="false" text="Redo" toggleGroup="$ToolButtons" />
          </children>
