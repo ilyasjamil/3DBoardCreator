@@ -25,7 +25,7 @@ public class MainEditorController {
 
 	@FXML
 	private void initialize() {
-		
+
 		drawGrid();
 		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
 	}
@@ -44,30 +44,27 @@ public class MainEditorController {
 
 				tile.setElevation(elevationSlider.getValue());
 				double elev = tile.getElevation();
-				
+
 				// TODO fillRect using an appropriate color, based on the elevation
 //				gc.setFill(Color.GREY);
 //				gc.fillRect(x,y, TILE_SIZE, TILE_SIZE);
 
-					
 			}
 		}
 
 	}
 
 	private void handleCanvasMousePress(MouseEvent evt) {
-		
 
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
 		int c = (int) (evt.getX() / TILE_SIZE);
 		int r = (int) (evt.getY() / TILE_SIZE);
 		Tile clickedTile = App.getGrid().getTileAt(r, c);
-		Color color = new Color( 0.52, 0.52, 0.52, elevationSlider.getValue()/10 );
+		Color color = new Color(0.0, 0.0, 0.0, elevationSlider.getValue() / 10);
 		gc.setFill(color);
-		gc.fillRect(c * TILE_SIZE ,r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-		clickedTile.setElevation(5);
-		drawGrid();
+		gc.fillRect(c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
+		drawGrid();
 
 	}
 
