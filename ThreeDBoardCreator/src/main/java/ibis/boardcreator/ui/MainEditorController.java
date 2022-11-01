@@ -60,7 +60,9 @@ public class MainEditorController {
 		int c = (int) (evt.getX() / TILE_SIZE);
 		int r = (int) (evt.getY() / TILE_SIZE);
 		Tile clickedTile = App.getGrid().getTileAt(r, c);
+
 		Color color = new Color(0.0, 0.0, 0.0, elevationSlider.getValue() / 10);
+
 		gc.setFill(color);
 		gc.fillRect(c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
