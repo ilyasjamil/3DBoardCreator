@@ -7,6 +7,7 @@ import ibis.boardcreator.datamodel.Tile;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
@@ -33,6 +34,8 @@ public class MainEditorController {
 		drawGrid();
 		// canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
 	}
+	
+	Alert alert = new Alert(Alert.AlertType.WARNING);
 
 	private void drawGrid() {
 		Grid grid = App.getGrid();
@@ -45,9 +48,6 @@ public class MainEditorController {
 				double y = r * TILE_SIZE;
 				gc.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
 				Tile tile = grid.getTileAt(r, c);
-
-				tile.setElevation(elevationSlider.getValue());
-				double elev = tile.getElevation();
 
 				// TODO fillRect using an appropriate color, based on the elevation
 //				gc.setFill(Color.GREY);
@@ -69,32 +69,47 @@ public class MainEditorController {
 	}
 
 	private void handleCanvasMousePressRemove(MouseEvent evt) {
-		// TODO Auto-generated method stub
+		// TODO write code to catch "java.lang.IllegalArgumentException: where color
+		// opacity goes below 0"
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
-		int c = (int) (evt.getX() / TILE_SIZE);
-		int r = (int) (evt.getY() / TILE_SIZE);
+		int r = (int) (evt.getX() / TILE_SIZE);
+		int c = (int) (evt.getY() / TILE_SIZE);
 		Tile clickedTile = App.getGrid().getTileAt(r, c);
-		clickedTile.setElevation(clickedTile.getElevation() - 2);
-		Color color = new Color(1, 1, 1, clickedTile.getElevation() / 10);
-		gc.setFill(color);
-		gc.fillRect(c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-		drawGrid();
+		if(clickedTile.getElevation() <2.0) {
+			alert.setContentText("Reached lowest elevation");
+			alert.show();
+		}else {
+			clickedTile.setElevation(clickedTile.getElevation() - 2);
+			Color color = new Color(1, 1, 1, clickedTile.getElevation() / 10);
+			gc.setFill(color);
+			gc.fillRect(c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+			drawGrid();
+		}
+		
 	}
 
 	private void handleCanvasMousePressAdd(MouseEvent evt) {
 
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
-		int c = (int) (evt.getX() / TILE_SIZE);
 		int r = (int) (evt.getY() / TILE_SIZE);
+		int c = (int) (evt.getX() / TILE_SIZE);
 		Tile clickedTile = App.getGrid().getTileAt(r, c);
-		Color color = new Color(0, 0, 0, elevationSlider.getValue() / 10);
-		gc.setFill(color);
-		gc.fillRect(c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+		if(clickedTile.getElevation() >= 10.0) {
+			alert.setContentText("Reached highest elevation");
+			alert.show();
+		}else {
+			clickedTile.setElevation(clickedTile.getElevation() + elevationSlider.getValue());
+			Color color = new Color(0, 0, 0, elevationSlider.getValue() / 10);
+			gc.setFill(color);
+			gc.fillRect(c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
-		drawGrid();
+			drawGrid();
+		}
+		
 
 	}
 
+	
 	@FXML
 	private void switchToThreeDPreview() throws IOException {
 		App.setRoot("Three_D_Preview");
