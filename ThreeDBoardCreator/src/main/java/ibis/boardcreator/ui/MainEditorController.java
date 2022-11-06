@@ -1,16 +1,24 @@
 package ibis.boardcreator.ui;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import ibis.boardcreator.datamodel.Grid;
+import ibis.boardcreator.datamodel.GridIO;
 import ibis.boardcreator.datamodel.Tile;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+
 
 public class MainEditorController {
 
@@ -78,7 +86,7 @@ public class MainEditorController {
 		Color color = new Color(1, 1, 1, clickedTile.getElevation() / 10);
 		gc.setFill(color);
 		gc.fillRect(c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-		drawGrid();
+		//drawGrid();
 	}
 
 	private void handleCanvasMousePressAdd(MouseEvent evt) {
@@ -87,17 +95,84 @@ public class MainEditorController {
 		int c = (int) (evt.getX() / TILE_SIZE);
 		int r = (int) (evt.getY() / TILE_SIZE);
 		Tile clickedTile = App.getGrid().getTileAt(r, c);
-		Color color = new Color(0, 0, 0, elevationSlider.getValue() / 10);
+		
+		double sliderValue = elevationSlider.getValue();
+		clickedTile.setElevation(sliderValue);
+		clickedTile.setRow(r);
+		clickedTile.setColumn(c);
+		Color color = new Color(0, 0, 0, sliderValue / 10);
+		clickedTile.incrementMultiplier();
 		gc.setFill(color);
 		gc.fillRect(c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
-		drawGrid();
+		//drawGrid();
 
 	}
 
 	@FXML
 	private void switchToThreeDPreview() throws IOException {
 		App.setRoot("Three_D_Preview");
+		
 	}
+	
+	@FXML
+	void openFileAction(ActionEvent event) {
+    	FileChooser openChooser = new FileChooser();
+    	FileChooser.ExtensionFilter extFilter = 
+                new FileChooser.ExtensionFilter("Grids (*.OBJ)", "*.OBJ");
+        openChooser.getExtensionFilters().add(extFilter);
+    	File inputFile = openChooser.showOpenDialog(App.getMainWindow());
+    	if (inputFile != null) {
+	    	try {
+		    	Grid grid = GridIO.loadMovieCollectionFromJSONFile(inputFile);
+		    	App.setGrid(grid);
+		    	Tile[][] board = grid.getBoard();
+		    	for (int i = 0; i < board.length;i++) {
+		    		for (int j = 0; j < board[i].length;j++) {
+		    			if (board[i][j].getElevation() > 0) {
+							GraphicsContext gc = canvasGrid.getGraphicsContext2D();
+							Color color = new Color(0, 0, 0, board[i][j].getElevation()/10);
+							for (int k = 0; k < board[i][j].getMultiplier();k++){
+								gc.setFill(color);
+			    				gc.fillRect(board[i][j].getColumn() * TILE_SIZE,board[i][j].getRow() * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+							}
+		    				
+		    			}
+		    		}
+
+		    	}
+		    	//movieListView.getItems().addAll(mc.getMovieList());
+		    	//collectionNameTextField.setText(mc.getName());
+	    	} catch (FileNotFoundException ex) {
+	    		new Alert(AlertType.ERROR, "The file you tried to open could not be found.").showAndWait();
+	    	} 
+	    	catch (IOException ex) {
+	    		new Alert(AlertType.ERROR, "Error opening file.  Did you choose a valid .movieList file (which uses JSON format?)").show();
+	    	}    	
+    	}
+    }
+	
+	@FXML
+    void saveFileAsAction(ActionEvent event) {
+    	FileChooser saveChooser = new FileChooser();
+    	FileChooser.ExtensionFilter extFilter = 
+                new FileChooser.ExtensionFilter("Grids (*.OBJ)", "*.OBJ");
+        saveChooser.getExtensionFilters().add(extFilter);
+    	File outputFile = saveChooser.showSaveDialog(App.getMainWindow());
+    	if (outputFile != null) {
+	    	Grid grid = App.getGrid();	    	
+	    	try {
+				GridIO.saveMovieCollectionAsJSONFile(grid, outputFile);
+			} catch (IOException ex) {
+	    		new Alert(AlertType.ERROR, "An I/O error occurred while trying to save this file.").showAndWait();			
+			}
+    	}
+    }
+	
+	@FXML
+	void saveFileAction(ActionEvent event) {
+		
+	}
+	
 
 }

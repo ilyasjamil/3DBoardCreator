@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.MainEditorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.MainEditorController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -28,9 +28,9 @@
                         <MenuItem mnemonicParsing="false" text="Empty board" />
                     </items>
                   </Menu>
-                  <MenuItem mnemonicParsing="false" text="Open" />
-                  <MenuItem mnemonicParsing="false" text="save" />
-                  <MenuItem mnemonicParsing="false" text="save as" />
+                  <MenuItem mnemonicParsing="false" onAction="#openFileAction" text="Open" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveFileAction" text="save" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveFileAsAction" text="save as" />
                   <MenuItem mnemonicParsing="false" text="export" />
             </items>
           </Menu>
