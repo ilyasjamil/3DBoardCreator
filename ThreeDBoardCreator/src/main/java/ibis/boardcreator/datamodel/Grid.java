@@ -17,6 +17,9 @@ public class Grid {
 			}
 		}
 	}
+	public Tile[][] getBoard(){
+		return this.board;
+	}
 	
 	public Tile getTileAt(int row, int column) {
 		return board[row][column];

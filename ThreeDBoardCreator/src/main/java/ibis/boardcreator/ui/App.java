@@ -18,6 +18,7 @@ public class App extends Application {
 
     private static Scene scene;
     private static Grid grid = new Grid();
+    private static Stage mainWindow;
 
     public static Grid getGrid() {
 		return grid;
@@ -30,6 +31,7 @@ public class App extends Application {
 	@Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("Main_Editor"), 640, 480);
+        mainWindow = stage;
         stage.setScene(scene);
 
         stage.show();
@@ -42,6 +44,10 @@ public class App extends Application {
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
+    }
+    
+    public static Stage getMainWindow() {
+    	return mainWindow;
     }
 
     public static void main(String[] args) {

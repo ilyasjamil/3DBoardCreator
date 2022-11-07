@@ -28,9 +28,9 @@
                         <MenuItem mnemonicParsing="false" text="Empty board" />
                     </items>
                   </Menu>
-                  <MenuItem mnemonicParsing="false" text="Open" />
-                  <MenuItem mnemonicParsing="false" text="save" />
-                  <MenuItem mnemonicParsing="false" text="save as" />
+                  <MenuItem mnemonicParsing="false" onAction="#openFileAction" text="Open" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveFileAction" text="save" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveFileAsAction" text="save as" />
                   <MenuItem mnemonicParsing="false" text="export" />
             </items>
           </Menu>
