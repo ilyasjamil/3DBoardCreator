@@ -39,11 +39,12 @@
               <MenuItem mnemonicParsing="false" onAction="#switchToThreeDPreview" text="preview 3D" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
+          <Menu mnemonicParsing="false" text="Help" />
+            <Menu fx:id="aboutScreen" mnemonicParsing="false" onAction="#aboutScreen" text="About">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>

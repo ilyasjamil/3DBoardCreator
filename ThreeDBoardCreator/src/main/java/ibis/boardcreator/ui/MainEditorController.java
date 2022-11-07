@@ -9,15 +9,18 @@ import ibis.boardcreator.datamodel.GridIO;
 import ibis.boardcreator.datamodel.Tile;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Menu;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 
 public class MainEditorController {
@@ -34,6 +37,8 @@ public class MainEditorController {
 
 	@FXML
 	private ToggleButton RaiseElevationButton;
+	
+	 @FXML private Menu aboutScreen;
 
 	@FXML
 	private void initialize() {
@@ -121,11 +126,7 @@ public class MainEditorController {
 
 	}
 
-	@FXML
-	private void switchToThreeDPreview() throws IOException {
-		App.setRoot("Three_D_Preview");
-		
-	}
+	
 	
 	@FXML
 	void openFileAction(ActionEvent event) {
@@ -183,6 +184,18 @@ public class MainEditorController {
 	
 	@FXML
 	void saveFileAction(ActionEvent event) {
+		
+	}
+	
+	@FXML
+	private void switchToThreeDPreview() throws IOException {
+		App.setRoot("Three_D_Preview");
+		
+	}
+	@FXML
+	private void switchToAboutScreen() throws IOException {
+		App.setRoot("About");
+		 
 		
 	}
 	
