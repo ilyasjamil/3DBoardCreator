@@ -38,7 +38,8 @@ public class MainEditorController {
 	@FXML
 	private ToggleButton RaiseElevationButton;
 	
-	 @FXML private Menu aboutScreen;
+	 @FXML 
+	 private Menu aboutScreen;
 
 	@FXML
 	private void initialize() {
@@ -194,7 +195,7 @@ public class MainEditorController {
 	}
 	@FXML
 	private void switchToAboutScreen() throws IOException {
-		App.setRoot("About");
+		App.setRoot("AboutScreen");
 		 
 		
 	}
