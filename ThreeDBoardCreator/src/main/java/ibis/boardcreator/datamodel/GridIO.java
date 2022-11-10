@@ -15,14 +15,14 @@ import com.google.gson.JsonSyntaxException;
 
 public class GridIO {
 	
-	public static void saveMovieCollectionAsJSONFile(Grid grid, File outputFile) throws IOException {
+	public static void save2dMapAsJSONFile(Grid grid, File outputFile) throws IOException {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		FileWriter writer = new FileWriter(outputFile);
 		gson.toJson(grid, writer);
 		writer.close();
 	}
 	
-	public static Grid loadMovieCollectionFromJSONFile(File inputFile) throws JsonSyntaxException, JsonIOException, IOException {
+	public static Grid load2dMapFromJSONFile(File inputFile) throws JsonSyntaxException, JsonIOException, IOException {
 		Gson gson = new Gson();
 		FileReader reader = new FileReader(inputFile);
 		Grid grid = gson.fromJson(reader, Grid.class);
