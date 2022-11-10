@@ -27,12 +27,7 @@ public class Tile {
     public double getElevation() {
 		return elevation;
 	}
-    public void setRow(int row) {
-    	this.row = row;
-    }
-    public void setColumn(int column) {
-    	this.column = column;
-    }
+    
     public int getMultiplier() {
 		return multiplier;
     }

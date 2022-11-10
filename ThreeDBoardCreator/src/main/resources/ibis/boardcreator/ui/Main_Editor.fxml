@@ -53,6 +53,20 @@
          </effect>
 
          <children>
+            <Label prefHeight="18.0" prefWidth="53.0" text="Elevation" />
+            <Slider fx:id="elevationSlider" max="10.0" showTickLabels="true" showTickMarks="true">
+               <padding>
+                  <Insets right="20.0" />
+               </padding>
+            </Slider>
+            <ToggleButton fx:id="raiseElevationButton" mnemonicParsing="false" text="Raise">
+               <toggleGroup>
+                  <ToggleGroup fx:id="toolButtonsGroup" />
+               </toggleGroup>
+            </ToggleButton>
+            <ToggleButton fx:id="lowerElevationButton" mnemonicParsing="false" text="Lower" toggleGroup="$toolButtonsGroup" />
+            <ToggleButton mnemonicParsing="false" text="Undo" />
+            <ToggleButton mnemonicParsing="false" text="Redo" />
             <GridPane>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -61,22 +75,7 @@
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
-               <children>
-                  <Slider fx:id="elevationSlider" max="10.0" showTickLabels="true" GridPane.columnIndex="1">
-                     <padding>
-                        <Insets right="20.0" />
-                     </padding></Slider>
-                  <Label prefHeight="18.0" prefWidth="53.0" text="Elevation" />
-               </children>
             </GridPane>
-            <ToggleButton fx:id="RaiseElevationButton" mnemonicParsing="false" onAction="#addTileAction" text="Raise">
-               <toggleGroup>
-                  <ToggleGroup fx:id="ToolButtons" />
-               </toggleGroup>
-            </ToggleButton>
-            <ToggleButton fx:id="LowerElevationButton" mnemonicParsing="false" onAction="#removeTileAction" text="Lower" toggleGroup="$ToolButtons" />
-            <ToggleButton mnemonicParsing="false" text="Undo" toggleGroup="$ToolButtons" />
-            <ToggleButton mnemonicParsing="false" text="Redo" toggleGroup="$ToolButtons" />
          </children>
          <opaqueInsets>
             <Insets />

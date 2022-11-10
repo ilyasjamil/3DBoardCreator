@@ -15,6 +15,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Menu;
 import javafx.scene.input.MouseEvent;
@@ -25,17 +26,22 @@ import javafx.stage.Stage;
 public class MainEditorController {
 
 	private final double TILE_SIZE = 50;
+	
+	private Tile currentTileModified = new Tile(-1, -1, 0);
 
 	@FXML
 	private Canvas canvasGrid;
 
 	@FXML
 	private Slider elevationSlider;
-	@FXML
-	private ToggleButton LowerElevationButton;
+    @FXML
+    private ToggleButton lowerElevationButton;
 
-	@FXML
-	private ToggleButton RaiseElevationButton;
+    @FXML
+    private ToggleButton raiseElevationButton;
+
+    @FXML
+    private ToggleGroup toolButtonsGroup;
 
 	@FXML
 	private Menu aboutScreen;
@@ -44,6 +50,7 @@ public class MainEditorController {
 	private void initialize() {
 
 		drawGrid();
+		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
 		canvasGrid.setOnMouseDragged(evt -> handleCanvasMouseDrag(evt));
 	}
 
@@ -55,7 +62,7 @@ public class MainEditorController {
 
 		for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumColumns(); c++) {
-				gc.setStroke(Color.BLACK);
+				gc.setStroke(Color.CYAN);
 				double x = c * TILE_SIZE;
 				double y = r * TILE_SIZE;
 				gc.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
@@ -63,85 +70,50 @@ public class MainEditorController {
 
 				// tile.setElevation(elevationSlider.getValue());
 				double elev = tile.getElevation();
-				// Color color = new Color(0, 0, 0, elev / 10);
-				Color color = new Color(elev / 10, elev / 10, elev / 10, 1.0);
+				double grayVal = 1 - elev / 10;
+				Color color = new Color(grayVal, grayVal, grayVal, 1);
 				gc.setFill(color);
 				gc.fillRect(c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
 			}
 		}
-
 	}
 
-	@FXML
-	private void removeTileAction() throws IOException {
-		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePressRemove(evt));
-	}
 
-	@FXML
-	private void addTileAction() throws IOException {
-		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePressAdd(evt));
-	}
-
-	private void handleCanvasMousePressRemove(MouseEvent evt) {
-		// TODO Auto-generated method stub
-		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
+	private void handleCanvasMousePress(MouseEvent evt) {
 		int c = (int) (evt.getX() / TILE_SIZE);
 		int r = (int) (evt.getY() / TILE_SIZE);
 		Tile clickedTile = App.getGrid().getTileAt(r, c);
-		if (clickedTile.getElevation() <= 2.0) {
-			alert.setContentText("Reached lowest elevation");
-			alert.show();
-		} else {
-			clickedTile.setElevation(clickedTile.getElevation() - 2);
+		adjustTileHeight(clickedTile);
 
-			System.out.print("Elevation: " + clickedTile.getElevation());
-
-			drawGrid();
+	}
+	
+	private void adjustTileHeight(Tile tile) {
+		double sliderValue = elevationSlider.getValue();
+		double newElevation = -1;
+		if (toolButtonsGroup.getSelectedToggle() == raiseElevationButton) {
+			newElevation = tile.getElevation() + sliderValue;
+		}else if(toolButtonsGroup.getSelectedToggle() == lowerElevationButton) {
+			newElevation = tile.getElevation() - sliderValue;
 		}
-	}
-
-	private void handleCanvasMousePressAdd(MouseEvent evt) {
-
-		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
-		int c = (int) (evt.getX() / TILE_SIZE);
-		int r = (int) (evt.getY() / TILE_SIZE);
-		Tile clickedTile = App.getGrid().getTileAt(r, c);
-		if (clickedTile.getElevation() >= 10.0) {
-			alert.setContentText("Reached highest elevation");
-			alert.show();
-		} else {
-			double sliderValue = elevationSlider.getValue();
-			double newElevation = clickedTile.getElevation() + sliderValue;
-			if (newElevation >= 10) {
-				newElevation = 10;
-			}
-			clickedTile.setElevation(newElevation);
-			drawGrid();
-			// clickedTile.setRow(r);
-			// clickedTile.setColumn(c);
-			// Color color = new Color(0, 0, 0, sliderValue / 10);
-			// clickedTile.incrementMultiplier();
-			// gc.setFill(color);
-			// gc.fillRect(c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+		if (newElevation >= 10) {
+			newElevation = 10;
+		}else if (newElevation <= 0) {
+			newElevation = 0;
 		}
-
-	}
-
-	private void handleCanvasMouseDrag(MouseEvent evt) {
-
-		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
-		int c = (int) (evt.getX() / TILE_SIZE);
-		int r = (int) (evt.getY() / TILE_SIZE);
-		Tile clickedTile = App.getGrid().getTileAt(r, c);
+		tile.setElevation(newElevation);
+		drawGrid();
+		currentTileModified = tile;
 		
-			double sliderValue = elevationSlider.getValue();
-			double newElevation = clickedTile.getElevation() + sliderValue;
-			if (newElevation >= 10) {
-				newElevation = 10;
-			}
-			clickedTile.setElevation(newElevation);
-			drawGrid();
+		
+	}
+	private void handleCanvasMouseDrag(MouseEvent evt) {
+		int c = (int) (evt.getX() / TILE_SIZE);
+		int r = (int) (evt.getY() / TILE_SIZE);
+		Tile dragTile = App.getGrid().getTileAt(r, c);
+		if (dragTile != currentTileModified) {
+			adjustTileHeight(dragTile);
+		}
 
 		}
 	
@@ -157,23 +129,6 @@ public class MainEditorController {
 				Grid grid = GridIO.load2dMapFromJSONFile(inputFile);
 				App.setGrid(grid);
 				drawGrid();
-//				Tile[][] board = grid.getBoard();
-//				for (int i = 0; i < board.length; i++) {
-//					for (int j = 0; j < board[i].length; j++) {
-//						if (board[i][j].getElevation() > 0) {
-//							GraphicsContext gc = canvasGrid.getGraphicsContext2D();
-//							Color color = new Color(0, 0, 0, board[i][j].getElevation() / 10);
-//							for (int k = 0; k < board[i][j].getMultiplier(); k++) {
-//								gc.setFill(color);
-//								gc.fillRect(board[i][j].getColumn() * TILE_SIZE, board[i][j].getRow() * TILE_SIZE,
-//										TILE_SIZE, TILE_SIZE);
-//							}
-//
-//						}
-//					}
-
-				// movieListView.getItems().addAll(mc.getMovieList());
-				// collectionNameTextField.setText(mc.getName());
 			} catch (FileNotFoundException ex) {
 				new Alert(AlertType.ERROR, "The file you tried to open could not be found.").showAndWait();
 			} catch (IOException ex) {
