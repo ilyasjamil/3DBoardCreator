@@ -55,7 +55,7 @@ public class MainEditorController {
 	}
 
 	Alert alert = new Alert(Alert.AlertType.WARNING);
-
+	//draws grid
 	private void drawGrid() {
 		Grid grid = App.getGrid();
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
