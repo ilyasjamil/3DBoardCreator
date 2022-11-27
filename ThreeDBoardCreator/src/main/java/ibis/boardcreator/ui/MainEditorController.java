@@ -70,7 +70,7 @@ public class MainEditorController {
 	private void initialize() {
 		Grid grid = App.getGrid();
 		TILE_SIZE = canvasGrid.getHeight()/Math.max(grid.getNumColumns(), grid.getNumRows());
-		drawGrid(true);
+		drawGrid(false);
 		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
 		canvasGrid.setOnMouseDragged(evt -> handleCanvasMouseDrag(evt));
 		clickedTileSet = new HashSet<>();

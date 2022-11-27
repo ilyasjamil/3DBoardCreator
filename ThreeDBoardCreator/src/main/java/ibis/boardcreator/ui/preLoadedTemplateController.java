@@ -34,8 +34,6 @@ public class preLoadedTemplateController {
 				double y = r * TILE_SIZE;
 				gc.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
 				Tile tile = selectedGrid.getTileAt(r, c);
-
-				// tile.setElevation(elevationSlider.getValue());
 				double elev = tile.getElevation();
 				double grayVal = 1 - elev / 10;
 				Color color = new Color(grayVal, grayVal, grayVal, 1);
