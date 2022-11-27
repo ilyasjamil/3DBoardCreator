@@ -3,11 +3,15 @@ package ibis.boardcreator.ui;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import ibis.boardcreator.datamodel.Grid;
 import ibis.boardcreator.datamodel.GridIO;
 import ibis.boardcreator.datamodel.Tile;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -17,9 +21,11 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -34,6 +40,16 @@ public class MainEditorController {
 
 	@FXML
 	private Slider elevationSlider;
+	
+    @FXML
+    private ToggleButton selectButton;
+
+    @FXML
+    private Button setBtn;
+    
+    @FXML
+    private Button clearMapBtn;
+    
     @FXML
     private ToggleButton lowerElevationButton;
 
@@ -45,6 +61,8 @@ public class MainEditorController {
 
 	@FXML
 	private Menu aboutScreen;
+	
+	private HashSet<Tile> clickedTileSet;
 
 	private double TILE_SIZE;
 
@@ -52,14 +70,14 @@ public class MainEditorController {
 	private void initialize() {
 		Grid grid = App.getGrid();
 		TILE_SIZE = canvasGrid.getHeight()/Math.max(grid.getNumColumns(), grid.getNumRows());
-		drawGrid();
+		drawGrid(true);
 		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
 		canvasGrid.setOnMouseDragged(evt -> handleCanvasMouseDrag(evt));
+		clickedTileSet = new HashSet<>();
 	}
 
-	Alert alert = new Alert(Alert.AlertType.WARNING);
 	//draws grid
-	private void drawGrid() {
+	private void drawGrid(Boolean newGrid) {
 		Grid grid = App.getGrid();
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
 		gc.clearRect(0, 0, canvasGrid.getHeight(), canvasGrid.getWidth());
@@ -69,26 +87,47 @@ public class MainEditorController {
 				double x = c * TILE_SIZE;
 				double y = r * TILE_SIZE;
 				gc.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
-				Tile tile = grid.getTileAt(r, c);
-
-				// tile.setElevation(elevationSlider.getValue());
-				double elev = tile.getElevation();
-				double grayVal = 1 - elev / 10;
-				Color color = new Color(grayVal, grayVal, grayVal, 1);
-				gc.setFill(color);
-				gc.fillRect(c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-
+				if (newGrid) {
+					Color color = new Color(1, 1, 1, 1);
+					gc.setFill(color);
+					gc.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+				}else {
+					Tile tile = grid.getTileAt(r, c);
+					double elev = tile.getElevation();
+					double grayVal = 1 - elev / 10;
+					Color color = new Color(grayVal, grayVal, grayVal, 1);
+					gc.setFill(color);
+					gc.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+				}
 			}
 		}
 	}
-
-
+	
+    @FXML
+    void setPressed(ActionEvent event) {
+    	if (!clickedTileSet.isEmpty()) {
+    		for (Tile tile : clickedTileSet) {
+    			double newElevation = tile.getElevation() + elevationSlider.getValue();
+    			tile.setElevation(newElevation);
+        	}
+    		drawGrid(false);
+    	}
+		clickedTileSet.clear();
+    }
 	private void handleCanvasMousePress(MouseEvent evt) {
-		int c = (int) (evt.getX() / TILE_SIZE);
-		int r = (int) (evt.getY() / TILE_SIZE);
-		Tile clickedTile = App.getGrid().getTileAt(r, c);
-		adjustTileHeight(clickedTile);
-
+		if(toolButtonsGroup.getSelectedToggle() == selectButton) {
+			int c = (int) (evt.getX() / TILE_SIZE);
+			int r = (int) (evt.getY() / TILE_SIZE);
+			Tile clickedTile = App.getGrid().getTileAt(r, c);
+			clickedTileSet.add(clickedTile);
+			highlightSelectedTile(c, r);
+		}else if(toolButtonsGroup.getSelectedToggle() != null){
+			int c = (int) (evt.getX() / TILE_SIZE);
+			int r = (int) (evt.getY() / TILE_SIZE);
+			Tile clickedTile = App.getGrid().getTileAt(r, c);
+			adjustTileHeight(clickedTile);
+		}
+		
 	}
 	
 	private void adjustTileHeight(Tile tile) {
@@ -105,7 +144,7 @@ public class MainEditorController {
 			newElevation = 0;
 		}
 		tile.setElevation(newElevation);
-		drawGrid();
+		drawGrid(false);
 		currentTileModified = tile;
 	}
 	
@@ -113,12 +152,30 @@ public class MainEditorController {
 		int c = (int) (evt.getX() / TILE_SIZE);
 		int r = (int) (evt.getY() / TILE_SIZE);
 		Tile dragTile = App.getGrid().getTileAt(r, c);
-		if (dragTile != currentTileModified) {
+		if (toolButtonsGroup.getSelectedToggle() == selectButton) {
+			clickedTileSet.add(dragTile);
+			dragTile.setElevation(0);
+			highlightSelectedTile(c, r);
+		}
+		if (dragTile != currentTileModified && toolButtonsGroup.getSelectedToggle() != selectButton && toolButtonsGroup.getSelectedToggle() != null) {
 			adjustTileHeight(dragTile);
 		}
+		
 
-		}
+	}
 	
+	private void highlightSelectedTile(int column, int row) {
+		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
+		gc.setStroke(Color.CRIMSON);
+		gc.strokeRect(column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+		gc.setFill(Color.ALICEBLUE);
+		gc.fillRect(column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+	}
+	
+    @FXML
+    void clearMapPressed(ActionEvent event) {
+    	drawGrid(true);
+    }
 
 	@FXML
 	void openFileAction(ActionEvent event) {
@@ -130,7 +187,7 @@ public class MainEditorController {
 			try {
 				Grid grid = GridIO.load2dMapFromJSONFile(inputFile);
 				App.setGrid(grid);
-				drawGrid();
+				drawGrid(false);
 			} catch (FileNotFoundException ex) {
 				new Alert(AlertType.ERROR, "The file you tried to open could not be found.").showAndWait();
 			} catch (IOException ex) {
@@ -156,10 +213,6 @@ public class MainEditorController {
 		}
 	}
 
-	@FXML
-	void saveFileAction(ActionEvent event) {
-
-	}
 
 	@FXML
 	private void switchToThreeDPreview() throws IOException {
