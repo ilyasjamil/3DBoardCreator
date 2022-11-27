@@ -25,7 +25,7 @@ import javafx.stage.Stage;
 
 public class MainEditorController {
 
-	private final double TILE_SIZE = 50;
+	
 	
 	private Tile currentTileModified = new Tile(-1, -1, 0);
 
@@ -46,9 +46,12 @@ public class MainEditorController {
 	@FXML
 	private Menu aboutScreen;
 
+	private double TILE_SIZE;
+
 	@FXML
 	private void initialize() {
-
+		Grid grid = App.getGrid();
+		TILE_SIZE = canvasGrid.getHeight()/Math.max(grid.getNumColumns(), grid.getNumRows());
 		drawGrid();
 		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
 		canvasGrid.setOnMouseDragged(evt -> handleCanvasMouseDrag(evt));
@@ -56,10 +59,14 @@ public class MainEditorController {
 
 	Alert alert = new Alert(Alert.AlertType.WARNING);
 	//draws grid
+
+//	Alert alert = new Alert(Alert.AlertType.WARNING);
+
+
 	private void drawGrid() {
 		Grid grid = App.getGrid();
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
-
+		gc.clearRect(0, 0, canvasGrid.getHeight(), canvasGrid.getWidth());
 		for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumColumns(); c++) {
 				gc.setStroke(Color.CYAN);
@@ -104,9 +111,8 @@ public class MainEditorController {
 		tile.setElevation(newElevation);
 		drawGrid();
 		currentTileModified = tile;
-		
-		
 	}
+	
 	private void handleCanvasMouseDrag(MouseEvent evt) {
 		int c = (int) (evt.getX() / TILE_SIZE);
 		int r = (int) (evt.getY() / TILE_SIZE);
@@ -141,7 +147,7 @@ public class MainEditorController {
 	@FXML
 	void saveFileAsAction(ActionEvent event) {
 		FileChooser saveChooser = new FileChooser();
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Grids (*.OBJ)", "*.OBJ");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Grids (*.MAP)", "*.OBJ");
 		saveChooser.getExtensionFilters().add(extFilter);
 		File outputFile = saveChooser.showSaveDialog(App.getMainWindow());
 		if (outputFile != null) {
@@ -161,13 +167,26 @@ public class MainEditorController {
 
 	@FXML
 	private void switchToThreeDPreview() throws IOException {
-		App.setRoot("Three_D_Preview");
+		Stage stage = new Stage();
+		ThreeDPreviewController j = new ThreeDPreviewController();
+		j.start(stage);
 
 	}
 
 	@FXML
 	private void switchToAboutScreen() throws IOException {
 		App.setRoot("AboutScreen");
+
+	}
+	
+	@FXML
+	private void switchToPreloadedScreen() throws IOException {
+		App.setRoot("preLoaded_Preview");
+
+	}
+	@FXML
+	private void switchToEmptyGrid() throws IOException {
+		App.setRoot("emptyGridGenerator");
 
 	}
 
