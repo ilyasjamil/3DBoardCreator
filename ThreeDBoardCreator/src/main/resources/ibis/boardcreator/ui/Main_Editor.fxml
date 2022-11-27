@@ -16,21 +16,20 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.MainEditorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="849.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.MainEditorController">
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
+      <MenuBar prefHeight="29.0" prefWidth="615.0" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <Menu mnemonicParsing="false" text="New project">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Preloaded template" />
-                        <MenuItem mnemonicParsing="false" text="Empty board" />
+                      <MenuItem mnemonicParsing="false" onAction="#switchToPreloadedScreen" text="Preloaded template" />
+                        <MenuItem mnemonicParsing="false" onAction="#switchToEmptyGrid" text="Empty board" />
                     </items>
                   </Menu>
                   <MenuItem mnemonicParsing="false" onAction="#openFileAction" text="Open" />
-                  <MenuItem mnemonicParsing="false" onAction="#saveFileAction" text="save" />
-                  <MenuItem mnemonicParsing="false" onAction="#saveFileAsAction" text="save as" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveFileAsAction" text="Save" />
                   <MenuItem mnemonicParsing="false" text="export" />
             </items>
           </Menu>
@@ -86,6 +85,6 @@
       <VBox prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
-      <Canvas fx:id="canvasGrid" height="300.0" width="400.0" BorderPane.alignment="CENTER" />
+      <Canvas fx:id="canvasGrid" height="500.0" width="500.0" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
