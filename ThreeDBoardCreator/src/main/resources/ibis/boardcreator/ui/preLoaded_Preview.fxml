@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="627.0" prefWidth="924.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.preLoadedTemplateController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="627.0" prefWidth="924.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.preLoadedTemplateController">
    <children>
       <TextField alignment="CENTER" prefHeight="34.0" prefWidth="939.0" text="Pre-loaded Templates (Select to view)">
          <font>
@@ -21,8 +21,8 @@
       </TextField>
       <GridPane prefHeight="413.0" prefWidth="970.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="ALWAYS" maxWidth="406.4000244140625" minWidth="10.0" prefWidth="274.9999755859375" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="547.2000366210938" minWidth="10.0" prefWidth="468.60002441406243" />
+          <ColumnConstraints hgrow="ALWAYS" maxWidth="406.4000244140625" minWidth="10.0" prefWidth="244.99998779296877" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="547.2000366210938" minWidth="10.0" prefWidth="469.0000122070313" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="56.4" minHeight="10.0" prefHeight="51.19999389648437" vgrow="SOMETIMES" />
@@ -31,7 +31,7 @@
             <RowConstraints maxHeight="49.599993896484364" minHeight="4.799993896484381" prefHeight="41.599993896484364" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" onAction="#switchToMountains" prefHeight="26.0" prefWidth="107.0" text="Mountains" textFill="#560b0b" GridPane.rowIndex="1">
+            <Button mnemonicParsing="false" onAction="#switchToMountains" prefHeight="34.0" prefWidth="107.0" text="Mountains" textFill="#560b0b" GridPane.rowIndex="1">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
@@ -47,15 +47,7 @@
                   <Insets bottom="5.0" />
                </GridPane.margin>
             </Button>
-            <Button layoutX="10.0" layoutY="70.0" mnemonicParsing="false" onAction="#switchToRoads" prefHeight="26.0" prefWidth="105.0" text="Roads" textFill="#4b0a0a">
-               <font>
-                  <Font name="Arial Black" size="12.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </Button>
-            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#switchToBuildings" prefHeight="26.0" prefWidth="106.0" text="Buildings" textFill="#6b0b0b" GridPane.columnIndex="1">
+            <Button layoutX="10.0" layoutY="70.0" mnemonicParsing="false" onAction="#switchToRoads" prefHeight="32.0" prefWidth="106.0" text="Roads" textFill="#4b0a0a">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
@@ -63,7 +55,15 @@
                   <Insets bottom="5.0" />
                </GridPane.margin>
             </Button>
-            <Button layoutX="308.0" layoutY="10.0" mnemonicParsing="false" onAction="#switchToValleys" prefHeight="26.0" prefWidth="109.0" text="Valleys" textFill="#611010" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#switchToBuildings" prefHeight="30.0" prefWidth="106.0" text="Buildings" textFill="#6b0b0b" GridPane.columnIndex="1">
+               <font>
+                  <Font name="Arial Black" size="12.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets bottom="5.0" />
+               </GridPane.margin>
+            </Button>
+            <Button layoutX="308.0" layoutY="10.0" mnemonicParsing="false" onAction="#switchToValleys" prefHeight="16.0" prefWidth="110.0" text="Valleys" textFill="#611010" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
@@ -99,11 +99,20 @@
          <padding>
             <Insets bottom="10.0" left="210.0" top="20.0" />
          </padding>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
       </GridPane>
       <ButtonBar prefHeight="40.0" prefWidth="200.0" />
-      <BorderPane prefHeight="346.0" prefWidth="924.0">
+      <BorderPane prefHeight="421.0" prefWidth="924.0">
+         <top>
+            <Canvas fx:id="canvasGridDisplay" height="318.0" width="444.0" BorderPane.alignment="BOTTOM_CENTER">
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin></Canvas>
+         </top>
          <bottom>
-          <Button mnemonicParsing="false" onAction="#switchToMainEditor" prefHeight="13.0" prefWidth="106.0" text="Choose" BorderPane.alignment="CENTER">
+          <Button mnemonicParsing="false" onAction="#switchToMainEditor" prefHeight="13.0" prefWidth="106.0" text="Select" BorderPane.alignment="CENTER">
                <padding>
                   <Insets bottom="10.0" top="10.0" />
                </padding>
@@ -111,12 +120,16 @@
                   <Insets bottom="10.0" right="70.0" top="20.0" />
                </BorderPane.margin></Button>
          </bottom>
-         <top>
-            <Canvas fx:id="canvasGridDisplay" height="360.0" width="444.0" BorderPane.alignment="BOTTOM_CENTER">
+         <right>
+            <Button mnemonicParsing="false" onAction="#switchToMain" text="Back" BorderPane.alignment="CENTER">
+               <padding>
+                  <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+               </padding>
                <BorderPane.margin>
-                  <Insets />
-               </BorderPane.margin></Canvas>
-         </top>
+                  <Insets right="50.0" />
+               </BorderPane.margin>
+            </Button>
+         </right>
       </BorderPane>
    </children>
 </VBox>
