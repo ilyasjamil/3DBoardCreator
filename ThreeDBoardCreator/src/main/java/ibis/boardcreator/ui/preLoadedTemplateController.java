@@ -50,6 +50,12 @@ public class preLoadedTemplateController {
     	App.setRoot("Main_Editor");
     	
     }
+    
+    @FXML
+    void switchToMain(ActionEvent event) throws IOException {
+    	App.setRoot("Main_Editor");
+    	
+    }
 
     @FXML
     void switchToMountains(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {

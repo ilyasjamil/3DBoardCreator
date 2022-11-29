@@ -17,8 +17,8 @@ import javafx.stage.Stage;
 
 public class ThreeDPreviewController extends Application {
 
-  private static final float WIDTH = 500;
-  private static final float HEIGHT = 500;
+  private static final float WIDTH = 700;
+  private static final float HEIGHT = 700;
 
   private double anchorX, anchorY;
   private double anchorAngleX = 0;
