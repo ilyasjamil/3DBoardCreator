@@ -23,7 +23,7 @@ public class Tile {
 	public int getColumn() {
 		return column;
 	}
-
+	
     public double getElevation() {
 		return elevation;
 	}
@@ -34,8 +34,6 @@ public class Tile {
     public void incrementMultiplier() {
     	this.multiplier++;
     }
-    
-  
     
 
 	public void setElevation(double elevation) {

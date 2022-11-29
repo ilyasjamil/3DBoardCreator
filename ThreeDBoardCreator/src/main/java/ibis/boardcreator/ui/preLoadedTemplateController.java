@@ -13,32 +13,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 
 public class preLoadedTemplateController {
 
-    @FXML
-    private Button mountainBtn;
     
     @FXML
     private Canvas canvasGridDisplay;
     
     private Grid selectedGrid;
-
-    @FXML
-    void switchToMainEditor(ActionEvent event) throws IOException {
-    	App.setGrid(selectedGrid);
-    	App.setRoot("Main_Editor");
-    	
-    }
-
-    @FXML
-    void switchToMountains(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
-  
-    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("mountains.OBJ"));
-    	drawSelected();
-    }
     
     private void drawSelected() {
     	double TILE_SIZE = canvasGridDisplay.getHeight()/Math.max(selectedGrid.getNumColumns(), selectedGrid.getNumRows());
@@ -51,8 +34,6 @@ public class preLoadedTemplateController {
 				double y = r * TILE_SIZE;
 				gc.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
 				Tile tile = selectedGrid.getTileAt(r, c);
-
-				// tile.setElevation(elevationSlider.getValue());
 				double elev = tile.getElevation();
 				double grayVal = 1 - elev / 10;
 				Color color = new Color(grayVal, grayVal, grayVal, 1);
@@ -62,5 +43,64 @@ public class preLoadedTemplateController {
 			}
 		}
     }
+
+    @FXML
+    void switchToMainEditor(ActionEvent event) throws IOException {
+    	App.setGrid(selectedGrid);
+    	App.setRoot("Main_Editor");
+    	
+    }
+
+    @FXML
+    void switchToMountains(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("mountains.OBJ"));
+    	drawSelected();
+    }
+    
+
+    @FXML
+    void switchToBuildings(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("buildings.OBJ"));
+    	drawSelected();
+    }
+
+
+    @FXML
+    void switchToMaze(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("maze.OBJ"));
+    	drawSelected();
+    }
+
+    @FXML
+    void switchToRailroads(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("railroads.OBJ"));
+    	drawSelected();
+    }
+
+    @FXML
+    void switchToRoads(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("roads.OBJ"));
+    	drawSelected();
+    }
+
+    @FXML
+    void switchToStadium(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("stadium.OBJ"));
+    	drawSelected();
+    }
+
+    @FXML
+    void switchToValleys(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("valley.OBJ"));
+    	drawSelected();
+    }
+
+    @FXML
+    void switchToVolcanoes(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("volcano.OBJ"));
+    	drawSelected();
+    }
+    
+    
 
 }
