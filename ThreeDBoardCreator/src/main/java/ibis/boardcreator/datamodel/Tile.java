@@ -1,8 +1,6 @@
 package ibis.boardcreator.datamodel;
 
-import javafx.scene.paint.Color;
-
-public class Tile {
+public class Tile implements Cloneable {
 	public static final double MAX_ELEVATION = 10.0;
 	private int row;
 	private int column;
@@ -36,5 +34,14 @@ public class Tile {
 		this.elevation = newElevation;
 	}
    
+	@Override
+	public Tile clone() {
+		// this works because we only have primitive types in Tile
+		try {
+			return (Tile) (super.clone());
+		} catch (CloneNotSupportedException ex) {
+			throw new IllegalStateException("can't happen");
+		}
+	}
 
 }
