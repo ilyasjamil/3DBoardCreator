@@ -90,7 +90,7 @@ public class MainEditorController {
 				gc.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
 				Tile tile = grid.getTileAt(r, c);
 				double elev = tile.getElevation();
-				double grayVal = 1 - elev / 10;
+				double grayVal = 1 - elev / Tile.MAX_ELEVATION;
 				Color color = new Color(grayVal, grayVal, grayVal, 1);
 				gc.setFill(color);
 				gc.fillRect(x, y, TILE_SIZE, TILE_SIZE);
@@ -102,7 +102,7 @@ public class MainEditorController {
     void setPressed(ActionEvent event) {
     	if (!clickedTileSet.isEmpty()) {
     		for (Tile tile : clickedTileSet) {
-    			double newElevation = tile.getElevation() + elevationSlider.getValue();
+    			double newElevation = elevationSlider.getValue();
     			tile.setElevation(newElevation);
         	}
     		drawGrid();
@@ -134,11 +134,6 @@ public class MainEditorController {
 		}else if(toolButtonsGroup.getSelectedToggle() == lowerElevationButton) {
 			newElevation = tile.getElevation() - sliderValue;
 		}
-		if (newElevation >= 10) {
-			newElevation = 10;
-		}else if (newElevation <= 0) {
-			newElevation = 0;
-		}
 		tile.setElevation(newElevation);
 		drawGrid();
 		currentTileModified = tile;
@@ -150,7 +145,6 @@ public class MainEditorController {
 		Tile dragTile = App.getGrid().getTileAt(r, c);
 		if (toolButtonsGroup.getSelectedToggle() == selectButton) {
 			clickedTileSet.add(dragTile);
-			dragTile.setElevation(0);
 			highlightSelectedTile(c, r);
 		}
 		if (dragTile != currentTileModified && toolButtonsGroup.getSelectedToggle() != selectButton && toolButtonsGroup.getSelectedToggle() != null) {
@@ -164,8 +158,8 @@ public class MainEditorController {
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
 		gc.setStroke(Color.CRIMSON);
 		gc.strokeRect(column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-		gc.setFill(Color.ALICEBLUE);
-		gc.fillRect(column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+		//gc.setFill(Color.ALICEBLUE);
+		//gc.fillRect(column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 	}
 	
     @FXML

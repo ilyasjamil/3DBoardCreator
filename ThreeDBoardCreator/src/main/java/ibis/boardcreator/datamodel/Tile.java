@@ -3,14 +3,12 @@ package ibis.boardcreator.datamodel;
 import javafx.scene.paint.Color;
 
 public class Tile {
-	
+	public static final double MAX_ELEVATION = 10.0;
 	private int row;
 	private int column;
 	private double elevation;
-	private int multiplier;
 	
     public Tile(int row, int column,  double elevation) {
-        this.multiplier = 0;
         this.row = row;    
         this.column = column;    
         this.elevation = elevation;
@@ -28,16 +26,14 @@ public class Tile {
 		return elevation;
 	}
     
-    public int getMultiplier() {
-		return multiplier;
-    }
-    public void incrementMultiplier() {
-    	this.multiplier++;
-    }
-    
 
-	public void setElevation(double elevation) {
-		this.elevation = elevation;
+	public void setElevation(double newElevation) {
+		if (newElevation >= MAX_ELEVATION) {
+			newElevation = MAX_ELEVATION;
+		} else if (newElevation <= 0) {
+			newElevation = 0;
+		}
+		this.elevation = newElevation;
 	}
    
 
