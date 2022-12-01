@@ -33,13 +33,15 @@ public class ThreeDPreviewController extends Application {
     SmartGroup group = new SmartGroup();
     prepareBox(group);
     
-
+    Grid grid = App.getGrid();
     Camera camera = new PerspectiveCamera(true);
     camera.setNearClip(1);
     camera.setFarClip(1000);
-    camera.translateZProperty().set(-200);
+    camera.translateZProperty().set(-500);
+    camera.translateXProperty().set((grid.getNumRows()/2) * 10);
+    camera.translateYProperty().set((grid.getNumColumns()/2) * 10);
 
-    Scene scene = new Scene(group, WIDTH, HEIGHT);
+    Scene scene = new Scene(group, WIDTH, HEIGHT,true);
     scene.setFill(Color.SILVER);
     scene.setCamera(camera);
 
@@ -48,7 +50,6 @@ public class ThreeDPreviewController extends Application {
     group.translateZProperty().set(0);
 
     initMouseControl(group, scene, primaryStage);
-
     primaryStage.setTitle("3D Preview");
     primaryStage.setScene(scene);
     primaryStage.show();
@@ -62,7 +63,7 @@ public class ThreeDPreviewController extends Application {
     		group.getChildren().add(box);
     		box.setTranslateX(col*10);
     		box.setTranslateY(row*10);
-    		box.setTranslateZ(grid.getTileAt(row, col).getElevation()*5 / 2);
+    		box.setTranslateZ(-grid.getTileAt(row, col).getElevation()*5 / 2);
     	}
     }
 

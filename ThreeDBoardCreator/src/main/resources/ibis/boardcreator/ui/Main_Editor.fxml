@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="849.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.MainEditorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="849.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.MainEditorController">
    <top>
       <MenuBar prefHeight="29.0" prefWidth="615.0" BorderPane.alignment="CENTER">
         <menus>
@@ -76,6 +76,8 @@
             <ToggleButton fx:id="lowerElevationButton" mnemonicParsing="false" text="Lower Tiles" toggleGroup="$toolButtonsGroup" />
             <ToggleButton mnemonicParsing="false" text="Undo" />
             <ToggleButton mnemonicParsing="false" text="Redo" />
+            <ToggleButton layoutX="75.0" layoutY="356.0" mnemonicParsing="false" onAction="#selectHeight" text="Same Height" />
+            <ToggleButton layoutX="75.0" layoutY="336.0" mnemonicParsing="false" onAction="#selectedARegion" text="Select Region" />
             <Button fx:id="clearMapBtn" mnemonicParsing="false" onAction="#clearMapPressed" text="Clear Map" />
          </children>
          <opaqueInsets>

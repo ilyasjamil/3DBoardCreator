@@ -59,6 +59,8 @@ public class MainEditorController {
 	private HashSet<Tile> clickedTileSet;
 
 	private double TILE_SIZE;
+	
+	
 
 	@FXML
 	private void initialize() {
@@ -91,17 +93,72 @@ public class MainEditorController {
 		}
 	}
 	
+	@FXML
+	void selectedARegion() {
+		Grid grid = App.getGrid();
+		if(clickedTileSet.size()==2) {
+			int startRow = 1000;
+			int endRow=-1;
+			int startCol=1000;
+			int endCol=-1;
+			for(Tile tile:clickedTileSet) {
+				if(tile.getRow()>endRow) {
+					endRow = tile.getRow();
+				}if(tile.getRow()<startRow) {
+					startRow=tile.getRow();
+				}if(tile.getColumn()>endCol) {
+					endCol= tile.getColumn();
+				}if(tile.getColumn()<startCol) {
+					startCol= tile.getColumn();
+				}
+			}
+			for (int r = startRow; r <= endRow; r++) {
+				for (int c = startCol; c <= endCol; c++) {
+					highlightSelectedTile(c, r);
+					clickedTileSet.add(grid.getTileAt(r, c));
+				}
+			}
+		}
+	}
+	
+	void copyRegion() {
+		
+	}
     @FXML
     void setPressed(ActionEvent event) {
     	if (!clickedTileSet.isEmpty()) {
     		for (Tile tile : clickedTileSet) {
     			double newElevation = tile.getElevation() + elevationSlider.getValue();
+    			if (newElevation > 10) {
+    				newElevation = 10;
+    			}else if(newElevation < 0) {
+    				newElevation = 0;
+    			}
     			tile.setElevation(newElevation);
         	}
     		drawGrid();
     	}
 		clickedTileSet.clear();
     }
+    
+    @FXML
+    public void selectHeight() {
+    	Grid grid = App.getGrid();
+    	HashSet<Double> selectHeights = new HashSet<>();
+    	for (Tile tile : clickedTileSet) {
+    		selectHeights.add(tile.getElevation());
+    	}
+    	for (int r = 0; r < grid.getNumRows(); r++) {
+			for (int c = 0; c < grid.getNumColumns(); c++) {
+				if (selectHeights.contains(grid.getTileAt(r, c).getElevation())) {
+					clickedTileSet.add(grid.getTileAt(r, c));
+					highlightSelectedTile(c,r);
+				}
+			}
+    	}
+    }
+    
+
 	private void handleCanvasMousePress(MouseEvent evt) {
 		if(toolButtonsGroup.getSelectedToggle() == selectButton) {
 			int c = (int) (evt.getX() / TILE_SIZE);
