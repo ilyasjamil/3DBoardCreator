@@ -42,7 +42,10 @@ public class MainEditorController {
     private Button setBtn;
     
     @FXML
-    private Button clearMapBtn;
+    private ToggleButton unselectBtn;
+    
+    @FXML
+    private ToggleButton clearMapBtn;
     
     @FXML
     private ToggleButton lowerElevationButton;
@@ -66,10 +69,10 @@ public class MainEditorController {
 	private void initialize() {
 		Grid grid = App.getGrid();
 		TILE_SIZE = canvasGrid.getHeight()/Math.max(grid.getNumColumns(), grid.getNumRows());
-		drawGrid();
 		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
 		canvasGrid.setOnMouseDragged(evt -> handleCanvasMouseDrag(evt));
 		clickedTileSet = new HashSet<>();
+		drawGrid();
 	}
 
 	//draws grid
@@ -79,19 +82,29 @@ public class MainEditorController {
 		gc.clearRect(0, 0, canvasGrid.getHeight(), canvasGrid.getWidth());
 		for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumColumns(); c++) {
-				gc.setStroke(Color.CYAN);
 				double x = c * TILE_SIZE;
 				double y = r * TILE_SIZE;
-				gc.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
 				Tile tile = grid.getTileAt(r, c);
+				if (clickedTileSet.contains(tile)) {
+					gc.setStroke(Color.RED);
+//					gc.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
+				}else if(toolButtonsGroup.getSelectedToggle() == clearMapBtn){
+					tile.setElevation(0);
+					gc.setStroke(Color.CYAN);
+				}else {
+					gc.setStroke(Color.CYAN);
+				}
+				gc.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
 				double elev = tile.getElevation();
 				double grayVal = 1 - elev / 10;
 				Color color = new Color(grayVal, grayVal, grayVal, 1);
 				gc.setFill(color);
 				gc.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+				}
+				
 			}
 		}
-	}
+
 	
 	@FXML
 	void selectedARegion() {
@@ -114,70 +127,93 @@ public class MainEditorController {
 			}
 			for (int r = startRow; r <= endRow; r++) {
 				for (int c = startCol; c <= endCol; c++) {
-					highlightSelectedTile(c, r);
+					drawGrid();
 					clickedTileSet.add(grid.getTileAt(r, c));
 				}
 			}
 		}
 	}
 	
-	void copyRegion() {
-		
+	@FXML
+	void clearSelected() {
+		for (Tile tile: clickedTileSet) {
+			tile.setElevation(0);
+		}
+		drawGrid();
 	}
+	
+
+	
     @FXML
     void setPressed(ActionEvent event) {
     	if (!clickedTileSet.isEmpty()) {
     		for (Tile tile : clickedTileSet) {
-    			double newElevation = tile.getElevation() + elevationSlider.getValue();
-    			if (newElevation > 10) {
-    				newElevation = 10;
-    			}else if(newElevation < 0) {
-    				newElevation = 0;
-    			}
+    			double newElevation = elevationSlider.getValue();
     			tile.setElevation(newElevation);
         	}
     		drawGrid();
     	}
-		clickedTileSet.clear();
+    	
+//		clickedTileSet.clear();
     }
+    
+//    @FXML
+//    void selectPressed(ActionEvent event) {
+//    	
+//    }
     
     @FXML
     public void selectHeight() {
     	Grid grid = App.getGrid();
     	HashSet<Double> selectHeights = new HashSet<>();
-    	for (Tile tile : clickedTileSet) {
-    		selectHeights.add(tile.getElevation());
+    	if (clickedTileSet.size() == 1) {
+    		for (Tile tile : clickedTileSet) {
+        		selectHeights.add(tile.getElevation());
+        	}
     	}
     	for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumColumns(); c++) {
 				if (selectHeights.contains(grid.getTileAt(r, c).getElevation())) {
 					clickedTileSet.add(grid.getTileAt(r, c));
-					highlightSelectedTile(c,r);
+					drawGrid();
 				}
 			}
     	}
     }
     
-
+//    @FXML
+//    public void copy() {
+//    	double[][] tileHeights = new double[5][5];
+//    	for (Tile tile: clickedTileSet) {
+//    		tileHeights.tile.getElevation()
+//    	}
+//    }
+    
+    @FXML
+    public void unSelectPressed() {
+    	clickedTileSet.clear();
+		drawGrid();
+    }
+    
 	private void handleCanvasMousePress(MouseEvent evt) {
 		if(toolButtonsGroup.getSelectedToggle() == selectButton) {
 			int c = (int) (evt.getX() / TILE_SIZE);
 			int r = (int) (evt.getY() / TILE_SIZE);
 			Tile clickedTile = App.getGrid().getTileAt(r, c);
 			clickedTileSet.add(clickedTile);
-			highlightSelectedTile(c, r);
+			drawGrid();
+		
 		}else if(toolButtonsGroup.getSelectedToggle() != null){
 			int c = (int) (evt.getX() / TILE_SIZE);
 			int r = (int) (evt.getY() / TILE_SIZE);
 			Tile clickedTile = App.getGrid().getTileAt(r, c);
 			adjustTileHeight(clickedTile);
 		}
-		
 	}
 	
 	private void adjustTileHeight(Tile tile) {
 		double sliderValue = elevationSlider.getValue();
-		double newElevation = -1;
+		double newElevation = 0;
 		if (toolButtonsGroup.getSelectedToggle() == raiseElevationButton) {
 			newElevation = tile.getElevation() + sliderValue;
 		}else if(toolButtonsGroup.getSelectedToggle() == lowerElevationButton) {
@@ -199,8 +235,7 @@ public class MainEditorController {
 		Tile dragTile = App.getGrid().getTileAt(r, c);
 		if (toolButtonsGroup.getSelectedToggle() == selectButton) {
 			clickedTileSet.add(dragTile);
-			dragTile.setElevation(0);
-			highlightSelectedTile(c, r);
+			drawGrid();
 		}
 		if (dragTile != currentTileModified && toolButtonsGroup.getSelectedToggle() != selectButton && toolButtonsGroup.getSelectedToggle() != null) {
 			adjustTileHeight(dragTile);
@@ -209,23 +244,9 @@ public class MainEditorController {
 
 	}
 	
-	private void highlightSelectedTile(int column, int row) {
-		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
-		gc.setStroke(Color.CRIMSON);
-		gc.strokeRect(column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-		gc.setFill(Color.ALICEBLUE);
-		gc.fillRect(column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-	}
 	
-    @FXML
-    void clearMapPressed(ActionEvent event) {
-    	Grid grid = App.getGrid();
-		for (int r = 0; r < grid.getNumRows(); r++) {
-			for (int c = 0; c < grid.getNumColumns(); c++) {
-				Tile tile = grid.getTileAt(r, c);
-				tile.setElevation(0);
-			}
-		}
+	@FXML
+	void clearMapPressed(ActionEvent event) {   	
 		drawGrid();
     }
 
