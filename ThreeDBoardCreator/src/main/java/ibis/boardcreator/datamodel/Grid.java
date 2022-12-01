@@ -24,13 +24,24 @@ public class Grid {
 		return board[row][column];
 	}
 	
-
 	public int getNumRows() {
 		return board.length;
 	}
 
 	public int getNumColumns() {
 		return board[0].length;
+	}
+	
+	public Grid clone() {
+		Grid copy = new Grid(this.getNumRows(), this.getNumColumns());
+		
+		Tile[][] copyBoard = copy.getBoard();
+		for (int r = 0; r < copy.getNumRows(); r++) {
+			for (int c = 0; c < copy.getNumColumns(); c++) {
+				copyBoard[r][c] = board[r][c].clone();
+			}
+		}
+		return copy;
 	}
 	
 }
