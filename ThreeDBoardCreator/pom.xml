@@ -9,6 +9,21 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
+    <dependencyManagement>
+    <dependencies>
+    
+    <dependency>
+            <groupId>org.junit</groupId>
+            <artifactId>junit-bom</artifactId>
+            <version>5.9.1</version>
+            <scope>import</scope>
+       </dependency> 
+    
+    
+    </dependencies>
+    
+    
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -25,7 +40,14 @@
 		    <groupId>com.google.code.gson</groupId>
 		    <artifactId>gson</artifactId>
 		    <version>2.10</version>
-		</dependency>        
+		</dependency>  
+		<dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+           	<version>5.9.1</version>
+          
+        </dependency>
+             
     </dependencies>
     <build>
         <plugins>
