@@ -3,26 +3,28 @@ package ibis.boardcreator.ui;
 import java.util.Stack;
 
 import ibis.boardcreator.datamodel.Grid;
+import ibis.boardcreator.ui.MainEditorController.EditorState;
 
 public class UndoRedoHandler {
 
-	private Stack<Grid> undoStack, redoStack;
+	private Stack<MainEditorController.EditorState> undoStack, redoStack;
 	// invariant: The top state of the undoStack always is a copy of the
 	// current state of the canvas.
 
-	public UndoRedoHandler(Grid startState) {
-		undoStack = new Stack<Grid>();
-		redoStack = new Stack<Grid>();
+	public UndoRedoHandler(MainEditorController.EditorState startState) {
+		undoStack = new Stack<MainEditorController.EditorState>();
+		redoStack = new Stack<MainEditorController.EditorState>();
 
 		// store the initial state of the canvas on the undo stack
-		undoStack.push(startState.clone());
+		
+		undoStack.push(startState);
 	}
 
 	/**
 	 * saves the current state of the drawing canvas for later restoration
 	 */
-	public void saveState(Grid state) {
-		undoStack.push(state.clone());
+	public void saveState(MainEditorController.EditorState curState) {
+		undoStack.push(curState);
 		redoStack.clear();
 	}
 
@@ -31,11 +33,11 @@ public class UndoRedoHandler {
 	 * if there's only the current state on the stack, 
 	 * it gets returned but not removed from the undo stack 
 	 */
-	public Grid undo() {
+	public EditorState undo() {
 		if (undoStack.size() == 1) // only the current state is on the stack
 			return undoStack.peek();
 
-		Grid currentState = undoStack.pop();
+		EditorState currentState = undoStack.pop();
 		redoStack.push(currentState);
 		
 		return undoStack.peek();
@@ -46,13 +48,14 @@ public class UndoRedoHandler {
 	 * action was performed. If some change was made to the Grid
 	 * since the last undo, then this method just returns the current state.
 	 */
-	public Grid redo() {
+	public EditorState redo() {
 		if (redoStack.isEmpty())
 			return undoStack.peek();
 
-		Grid currentState = redoStack.pop();
+		EditorState currentState = redoStack.pop();
 		undoStack.push(currentState);
 		return currentState;
+		
 	}
 
 }

@@ -103,11 +103,11 @@
                      <GridPane.margin>
                         <Insets right="25.0" />
                      </GridPane.margin></ToggleButton>
-                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="156.0" text="Redo" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <Button mnemonicParsing="false" onAction="#redoAction" prefHeight="26.0" prefWidth="156.0" text="Redo" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets right="25.0" />
                      </GridPane.margin></Button>
-                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="135.0" text="Undo" GridPane.rowIndex="3">
+                  <Button mnemonicParsing="false" onAction="#undoAction" prefHeight="26.0" prefWidth="135.0" text="Undo" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets right="10.0" />
                      </GridPane.margin></Button>

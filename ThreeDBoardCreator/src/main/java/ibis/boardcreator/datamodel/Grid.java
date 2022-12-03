@@ -1,5 +1,6 @@
 package ibis.boardcreator.datamodel;
 
+
 public class Grid {
 	private Tile[][] board;
 	private double TILE_SIDE_LENGTH = 10.0; // TODO: should this change to an instance variable?
@@ -43,5 +44,7 @@ public class Grid {
 		}
 		return copy;
 	}
+	
+
 	
 }
