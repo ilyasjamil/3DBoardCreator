@@ -77,7 +77,7 @@ public class MainEditorController {
 
 	// draws grid
 	private void drawGrid() {
-		Grid grid = App.getGrid();
+		Grid grid = App.getGrid();	
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
 		gc.clearRect(0, 0, canvasGrid.getHeight(), canvasGrid.getWidth());
 		for (int r = 0; r < grid.getNumRows(); r++) {
@@ -101,9 +101,12 @@ public class MainEditorController {
 				gc.fillRect(x, y, TILE_SIZE, TILE_SIZE);
 			}
 
-		}
+				
 
+		}
 	}
+
+	
 
 	@FXML
 	void selectedARegion() {
@@ -131,12 +134,15 @@ public class MainEditorController {
 				for (int c = startCol; c <= endCol; c++) {
 
 					clickedTileSet.add(grid.getTileAt(r, c));
+					drawGrid();
 				}
 			}
 
 		}
+
 		drawGrid();
 		undoRedoHandler.saveState(createMemento());
+
 	}
 
 	@FXML
@@ -147,6 +153,8 @@ public class MainEditorController {
 		drawGrid();
 		undoRedoHandler.saveState(createMemento());
 	}
+
+	
 
 	@FXML
 	void setPressed(ActionEvent event) {
@@ -171,6 +179,7 @@ public class MainEditorController {
 			}
 		}
 		for (int r = 0; r < grid.getNumRows(); r++) {
+
 			for (int c = 0; c < grid.getNumColumns(); c++) {
 				if (selectHeights.contains(grid.getTileAt(r, c).getElevation())) {
 					clickedTileSet.add(grid.getTileAt(r, c));
@@ -196,7 +205,6 @@ public class MainEditorController {
 			clickedTileSet.add(clickedTile);
 			drawGrid();
 			undoRedoHandler.saveState(createMemento());
-
 
 		} else if (toolButtonsGroup.getSelectedToggle() != null) {
 			int c = (int) (evt.getX() / TILE_SIZE);
@@ -238,15 +246,20 @@ public class MainEditorController {
 				&& toolButtonsGroup.getSelectedToggle() != null) {
 			adjustTileHeight(dragTile);
 		}
-		
-
 	}
 
 	@FXML
 	void clearMapPressed(ActionEvent event) {
 		drawGrid();
+
 		undoRedoHandler.saveState(createMemento());
 	}
+
+	
+
+	
+
+	
 
 	@FXML
 	void openFileAction(ActionEvent event) {

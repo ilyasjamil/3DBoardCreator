@@ -9,7 +9,8 @@ public class UndoRedoHandler {
 
 	private Stack<MainEditorController.EditorState> undoStack, redoStack;
 	// invariant: The top state of the undoStack always is a copy of the
-	// current state of the canvas.
+	// current state of the grid.
+
 
 	public UndoRedoHandler(MainEditorController.EditorState startState) {
 		undoStack = new Stack<MainEditorController.EditorState>();
@@ -18,10 +19,11 @@ public class UndoRedoHandler {
 		// store the initial state of the canvas on the undo stack
 		
 		undoStack.push(startState);
+
 	}
 
 	/**
-	 * saves the current state of the drawing canvas for later restoration
+	 * saves the current state of the grid for later restoration
 	 */
 	public void saveState(MainEditorController.EditorState curState) {
 		undoStack.push(curState);
@@ -42,7 +44,7 @@ public class UndoRedoHandler {
 		
 		return undoStack.peek();
 	}
-
+	
 	/**
 	 * returns the state of the grid from before the last undo
 	 * action was performed. If some change was made to the Grid
