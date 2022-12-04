@@ -60,6 +60,7 @@ public class MainEditorController {
 	private Menu aboutScreen;
 	
 	private HashSet<Tile> clickedTileSet;
+	
 
 	private double TILE_SIZE;
 	
@@ -77,7 +78,7 @@ public class MainEditorController {
 
 	//draws grid
 	private void drawGrid() {
-		Grid grid = App.getGrid();
+		Grid grid = App.getGrid();	
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
 		gc.clearRect(0, 0, canvasGrid.getHeight(), canvasGrid.getWidth());
 		for (int r = 0; r < grid.getNumRows(); r++) {
@@ -100,10 +101,10 @@ public class MainEditorController {
 				Color color = new Color(grayVal, grayVal, grayVal, 1);
 				gc.setFill(color);
 				gc.fillRect(x, y, TILE_SIZE, TILE_SIZE);
-				}
-				
 			}
+				
 		}
+	}
 
 	
 	@FXML
@@ -127,11 +128,12 @@ public class MainEditorController {
 			}
 			for (int r = startRow; r <= endRow; r++) {
 				for (int c = startCol; c <= endCol; c++) {
-					drawGrid();
 					clickedTileSet.add(grid.getTileAt(r, c));
+					drawGrid();
 				}
 			}
 		}
+		
 	}
 	
 	@FXML
@@ -153,14 +155,9 @@ public class MainEditorController {
         	}
     		drawGrid();
     	}
-    	
-//		clickedTileSet.clear();
+ 
     }
     
-//    @FXML
-//    void selectPressed(ActionEvent event) {
-//    	
-//    }
     
     @FXML
     public void selectHeight() {
@@ -240,8 +237,6 @@ public class MainEditorController {
 		if (dragTile != currentTileModified && toolButtonsGroup.getSelectedToggle() != selectButton && toolButtonsGroup.getSelectedToggle() != null) {
 			adjustTileHeight(dragTile);
 		}
-		
-
 	}
 	
 	
@@ -249,7 +244,8 @@ public class MainEditorController {
 	void clearMapPressed(ActionEvent event) {   	
 		drawGrid();
     }
-
+	
+	
 	@FXML
 	void openFileAction(ActionEvent event) {
 		FileChooser openChooser = new FileChooser();
