@@ -24,7 +24,6 @@ public class Grid {
 		return board[row][column];
 	}
 	
-
 	public int getNumRows() {
 		return board.length;
 	}
@@ -33,5 +32,43 @@ public class Grid {
 		return board[0].length;
 	}
 	
-	
+
+	public Grid clone() {
+		Grid copy = new Grid(this.getNumRows(), this.getNumColumns());
+		
+		Tile[][] copyBoard = copy.getBoard();
+		for (int r = 0; r < copy.getNumRows(); r++) {
+			for (int c = 0; c < copy.getNumColumns(); c++) {
+				copyBoard[r][c] = board[r][c].clone();
+			}
+		}
+		return copy;
+	}
+	public void resize(int newRows, int newColumns) {
+		Tile[][] newBoard = new Tile[newRows][newColumns];
+		//copy old data into new board using nested FOR loops
+		// if the new locqtion is beyond the old boqrd; then make empty Tiles to fill in
+		for(int i = 0; i < newRows; i++) {
+			if(i >= board.length) {
+				for(int j = 0; j < newColumns; j++) {
+					newBoard[i][j] = new Tile(i, j, 0);
+				}
+			}
+			else {
+				for(int j = 0; j < newColumns; j++) {		
+					if(j >= board[0].length) {
+						newBoard[i][j] = new Tile(i, j, 0);
+					}
+					else{
+						newBoard[i][j] = board[i][j];
+					}
+		
+				}
+			}
+			
+		}
+		
+		board = newBoard;
+		
+	}
 }
