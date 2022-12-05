@@ -1,5 +1,6 @@
 package ibis.boardcreator.datamodel;
 
+
 public class Grid {
 	private Tile[][] board;
 	private double TILE_SIDE_LENGTH = 10.0; // TODO: should this change to an instance variable?
@@ -44,6 +45,7 @@ public class Grid {
 		}
 		return copy;
 	}
+	
 	public void resize(int newRows, int newColumns) {
 		Tile[][] newBoard = new Tile[newRows][newColumns];
 		//copy old data into new board using nested FOR loops
@@ -71,4 +73,5 @@ public class Grid {
 		board = newBoard;
 		
 	}
+
 }
