@@ -2,6 +2,7 @@ package ibis.boardcreator.ui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import ibis.boardcreator.datamodel.Grid;
@@ -306,6 +307,57 @@ public class MainEditorController {
 			}
 		}
 	}
+	@FXML
+	public void exportOBJAction() {
+		FileChooser saveChooser = new FileChooser();
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("OBJ File(*.OBJ)", "*.OBJ");
+		saveChooser.getExtensionFilters().add(extFilter);
+		File outputFile = saveChooser.showSaveDialog(App.getMainWindow());
+		if (outputFile != null) {
+			Grid grid = App.getGrid();
+			Tile[][] board = grid.getBoard();
+		    try {
+				FileWriter writer = new FileWriter(outputFile);
+				writer.write("o "+1+System.lineSeparator());
+				for (int i = 0; i < board.length;i++) {
+					for (int j = 0; j < board[0].length;j++) {
+						Tile tile = board[i][j];
+						int r = tile.getRow();
+						int c = tile.getColumn();
+						double e = tile.getElevation();
+						writer.write("v "+c+" "+r+" "+e+System.lineSeparator());
+						writer.write("v "+c+" "+r+" "+0+System.lineSeparator());
+						writer.write("v "+c+" "+String.valueOf(r+1)+" "+0+System.lineSeparator());
+						writer.write("v "+c+" "+String.valueOf(r+1)+" "+e+System.lineSeparator());
+						writer.write("v "+String.valueOf(c+1)+" "+r+" "+e+System.lineSeparator());
+						writer.write("v "+String.valueOf(c+1)+" "+r+" "+0+System.lineSeparator());
+						writer.write("v "+String.valueOf(c+1)+" "+String.valueOf(r+1)+" "+0+System.lineSeparator());
+						writer.write("v "+String.valueOf(c+1)+" "+String.valueOf(r+1)+" "+e+System.lineSeparator());
+					}
+				}
+				writer.write("usemtl Default"+System.lineSeparator());
+				
+				for (int i = 0; i < board.length*board[0].length;i++) {
+						writer.write("f "+ String.valueOf(8*i+4)+ " "+ String.valueOf(8*i+3) +" "+ String.valueOf(8*i+2) +" "+ String.valueOf(8*i+1) +System.lineSeparator());
+						writer.write("f "+ String.valueOf(8*i+2)+ " "+ String.valueOf(8*i+6) +" "+ String.valueOf(8*i+5) +" "+ String.valueOf(8*i+1) +System.lineSeparator());
+						writer.write("f "+ String.valueOf(8*i+3)+ " "+ String.valueOf(8*i+7) +" "+ String.valueOf(8*i+6) +" "+ String.valueOf(8*i+2) +System.lineSeparator());
+						writer.write("f "+ String.valueOf(8*i+8)+ " "+ String.valueOf(8*i+7) +" "+ String.valueOf(8*i+3) +" "+ String.valueOf(8*i+4) +System.lineSeparator());
+						writer.write("f "+ String.valueOf(8*i+5)+ " "+ String.valueOf(8*i+8) +" "+ String.valueOf(8*i+4) +" "+ String.valueOf(8*i+1) +System.lineSeparator());
+						writer.write("f "+ String.valueOf(8*i+6)+ " "+ String.valueOf(8*i+7) +" "+ String.valueOf(8*i+8) +" "+ String.valueOf(8*i+5) +System.lineSeparator());
+				}
+				writer.close();
+				
+				
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+
+	}
 
 	@FXML
 	void redoAction(ActionEvent event) {
@@ -367,6 +419,7 @@ public class MainEditorController {
 	public EditorState createMemento() {
 		return new EditorState();
 	}
+	
 
 	public class EditorState {
 		private Grid clonedGrid;
@@ -389,5 +442,6 @@ public class MainEditorController {
 			drawGrid();
 		}
 	}
+	
 
 }

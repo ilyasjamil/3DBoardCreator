@@ -32,7 +32,6 @@ public class ThreeDPreviewController extends Application {
 
     SmartGroup group = new SmartGroup();
     prepareBox(group);
-    
     Grid grid = App.getGrid();
     Camera camera = new PerspectiveCamera(true);
     camera.setNearClip(1);

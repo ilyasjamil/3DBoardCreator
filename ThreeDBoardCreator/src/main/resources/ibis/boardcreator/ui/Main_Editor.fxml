@@ -33,7 +33,7 @@
                   </Menu>
                   <MenuItem mnemonicParsing="false" onAction="#openFileAction" text="Open" />
                   <MenuItem mnemonicParsing="false" onAction="#saveFileAsAction" text="Save" />
-                  <MenuItem mnemonicParsing="false" text="export" />
+                  <MenuItem mnemonicParsing="false" onAction="#exportOBJAction" text="export" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Preview">
