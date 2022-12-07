@@ -48,29 +48,27 @@ public class Grid {
 	
 	public void resize(int newRows, int newColumns) {
 		Tile[][] newBoard = new Tile[newRows][newColumns];
+		
+		
 		//copy old data into new board using nested FOR loops
 		// if the new locqtion is beyond the old boqrd; then make empty Tiles to fill in
+		
+		
 		for(int i = 0; i < newRows; i++) {
-			if(i >= board.length) {
-				for(int j = 0; j < newColumns; j++) {
+			for(int j = 0; j < newColumns; j++) {
+				if(i >= board.length || j >= board[0].length) {
 					newBoard[i][j] = new Tile(i, j, 0);
 				}
-			}
-			else {
-				for(int j = 0; j < newColumns; j++) {		
-					if(j >= board[0].length) {
-						newBoard[i][j] = new Tile(i, j, 0);
-					}
-					else{
-						newBoard[i][j] = board[i][j];
-					}
-		
+				else {
+					newBoard[i][j] = board[i][j];
 				}
 			}
-			
+				
 		}
 		
-		board = newBoard;
+		
+		
+		this.board = newBoard;
 		
 	}
 

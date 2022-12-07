@@ -19,6 +19,8 @@ public class UndoRedoHandler {
 		// store the initial state of the canvas on the undo stack
 		
 		undoStack.push(startState);
+		System.out.println("after constructor: " +undoStack.size());
+		System.out.println("a c undo stack: " +undoStack);
 
 	}
 
@@ -26,6 +28,8 @@ public class UndoRedoHandler {
 	 * saves the current state of the grid for later restoration
 	 */
 	public void saveState(MainEditorController.EditorState curState) {
+		System.out.println("before save: " +undoStack.size());
+		System.out.println("bef save undo stack: " +undoStack);
 		undoStack.push(curState);
 		redoStack.clear();
 	}
@@ -36,6 +40,8 @@ public class UndoRedoHandler {
 	 * it gets returned but not removed from the undo stack 
 	 */
 	public EditorState undo() {
+		System.out.println("undo: " +undoStack.size());
+		System.out.println("undo stack: " +undoStack);
 		if (undoStack.size() == 1) // only the current state is on the stack
 			return undoStack.peek();
 
@@ -51,6 +57,7 @@ public class UndoRedoHandler {
 	 * since the last undo, then this method just returns the current state.
 	 */
 	public EditorState redo() {
+		System.out.println("redo: " +undoStack.size());
 		if (redoStack.isEmpty())
 			return undoStack.peek();
 

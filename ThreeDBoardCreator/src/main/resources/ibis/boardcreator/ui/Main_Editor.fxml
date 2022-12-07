@@ -134,7 +134,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ToggleButton fx:id="resizeButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="101.0" text="Resize Map" toggleGroup="$toolButtonsGroup" GridPane.columnIndex="1" />
+                  <ToggleButton fx:id="resizeButton" mnemonicParsing="false" onAction="#switchToResizeChoice" prefHeight="26.0" prefWidth="101.0" text="Resize Map" toggleGroup="$toolButtonsGroup" GridPane.columnIndex="1" />
                   <ToggleButton mnemonicParsing="false" onAction="#selectedARegion" prefHeight="26.0" prefWidth="100.0" text="Select Region" />
                   <ToggleButton mnemonicParsing="false" onAction="#selectHeight" prefHeight="26.0" prefWidth="99.0" text="Same Height" GridPane.rowIndex="1" />
                </children>

@@ -10,6 +10,9 @@ import ibis.boardcreator.datamodel.GridIO;
 import ibis.boardcreator.datamodel.Tile;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -23,6 +26,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainEditorController {
@@ -65,7 +69,6 @@ public class MainEditorController {
 
 	private HashSet<Tile> clickedTileSet;
 
-	private double TILE_SIZE;
 	private UndoRedoHandler undoRedoHandler;
 	
 	@FXML
@@ -78,12 +81,16 @@ public class MainEditorController {
 	private void initialize() {
 		Grid grid = App.getGrid();
 
-		TILE_SIZE = canvasGrid.getHeight() / Math.max(grid.getNumColumns(), grid.getNumRows());
 		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
 		canvasGrid.setOnMouseDragged(evt -> handleCanvasMouseDrag(evt));
 		clickedTileSet = new HashSet<>();
 		undoRedoHandler = new UndoRedoHandler(createMemento());
 		drawGrid();
+	}
+	
+	private double getTileSize() {
+		Grid grid = App.getGrid();
+		return canvasGrid.getHeight() / Math.max(grid.getNumColumns(), grid.getNumRows());
 	}
 
 	// draws grid
@@ -93,8 +100,8 @@ public class MainEditorController {
 		gc.clearRect(0, 0, canvasGrid.getHeight(), canvasGrid.getWidth());
 		for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumColumns(); c++) {
-				double x = c * TILE_SIZE;
-				double y = r * TILE_SIZE;
+				double x = c * getTileSize();
+				double y = r * getTileSize();
 				Tile tile = grid.getTileAt(r, c);
 				if (clickedTileSet.contains(tile)) {
 					gc.setStroke(Color.RED);
@@ -104,12 +111,12 @@ public class MainEditorController {
 				} else {
 					gc.setStroke(Color.CYAN);
 				}
-				gc.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
+				gc.strokeRect(x, y, getTileSize(), getTileSize());
 				double elev = tile.getElevation();
 				double grayVal = 1 - elev / 10;
 				Color color = new Color(grayVal, grayVal, grayVal, 1);
 				gc.setFill(color);
-				gc.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+				gc.fillRect(x, y, getTileSize(), getTileSize());
 			}
 
 				
@@ -210,16 +217,16 @@ public class MainEditorController {
 
 	private void handleCanvasMousePress(MouseEvent evt) {
 		if (toolButtonsGroup.getSelectedToggle() == selectButton) {
-			int c = (int) (evt.getX() / TILE_SIZE);
-			int r = (int) (evt.getY() / TILE_SIZE);
+			int c = (int) (evt.getX() / getTileSize());
+			int r = (int) (evt.getY() / getTileSize());
 			Tile clickedTile = App.getGrid().getTileAt(r, c);
 			clickedTileSet.add(clickedTile);
 			drawGrid();
 			undoRedoHandler.saveState(createMemento());
 
 		} else if (toolButtonsGroup.getSelectedToggle() != null) {
-			int c = (int) (evt.getX() / TILE_SIZE);
-			int r = (int) (evt.getY() / TILE_SIZE);
+			int c = (int) (evt.getX() / getTileSize());
+			int r = (int) (evt.getY() / getTileSize());
 			Tile clickedTile = App.getGrid().getTileAt(r, c);
 			adjustTileHeight(clickedTile);
 		}
@@ -245,8 +252,8 @@ public class MainEditorController {
 	}
 
 	private void handleCanvasMouseDrag(MouseEvent evt) {
-		int c = (int) (evt.getX() / TILE_SIZE);
-		int r = (int) (evt.getY() / TILE_SIZE);
+		int c = (int) (evt.getX() / getTileSize());
+		int r = (int) (evt.getY() / getTileSize());
 		Tile dragTile = App.getGrid().getTileAt(r, c);
 		if (toolButtonsGroup.getSelectedToggle() == selectButton) {
 			clickedTileSet.add(dragTile);
@@ -372,23 +379,6 @@ public class MainEditorController {
 
 	}
 	
-	
-	private void resizeAction() throws IOException {
-		if (toolButtonsGroup.getSelectedToggle() == resizeButton) {
-			try {
-				Grid grid = App.getGrid();
-				grid.resize(Integer.parseInt(numRows.getText()), Integer.parseInt(numColumns.getText()));
-				App.setGrid(grid);
-				App.setRoot("Main_Editor");
-			}catch (NumberFormatException ext){
-				Alert alert = new Alert(Alert.AlertType.WARNING,"Please insert a number");
-				alert.show();
-			}
-			
-		}
-		drawGrid();
-		undoRedoHandler.saveState(createMemento());
-	}
 
 	@FXML
 	private void switchToThreeDPreview() throws IOException {
@@ -400,8 +390,17 @@ public class MainEditorController {
 
 	@FXML
 	private void switchToAboutScreen() throws IOException {
-		App.setRoot("AboutScreen");
-
+		//App.setRoot("AboutScreen");
+		Stage aboutScreenDialog = new Stage();
+		FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("AboutScreen.fxml"));
+        Parent root = fxmlLoader.load();
+        Scene aboutScreenScene = new Scene(root, 840, 680);
+        aboutScreenDialog.setScene(aboutScreenScene);
+        aboutScreenDialog.initOwner(App.getMainWindow());
+        aboutScreenDialog.initModality(Modality.APPLICATION_MODAL); 
+        aboutScreenDialog.showAndWait();
+		drawGrid();
+        
 	}
 
 	@FXML
@@ -415,6 +414,25 @@ public class MainEditorController {
 		App.setRoot("emptyGridGenerator");
 
 	}
+	
+	@FXML
+	private void switchToResizeChoice() throws IOException {
+		//App.setRoot("ResizeChoiceController");
+		Stage resizeDialog = new Stage();
+
+		// populate dialog with controls.
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("ResizeChoiceController.fxml"));
+        Parent root = fxmlLoader.load();
+        Scene resizeScene = new Scene(root, 840, 680);
+        resizeDialog.setScene(resizeScene);
+
+		resizeDialog.initOwner(App.getMainWindow());
+		resizeDialog.initModality(Modality.APPLICATION_MODAL); 
+		resizeDialog.showAndWait();
+		drawGrid();
+//		undoRedoHandler.saveState(createMemento());
+	}
+	
 
 	public EditorState createMemento() {
 		return new EditorState();
@@ -434,11 +452,18 @@ public class MainEditorController {
 			for (Tile tile : clickedTileSet) {
 				selectionSet.add(clonedGrid.getTileAt(tile.getRow(), tile.getColumn()));
 			}
+			
 		}
 
 		public void restore() {
-			App.setGrid(clonedGrid);
-			clickedTileSet = selectionSet;
+			Grid clonedAgainGrid = clonedGrid.clone();
+			App.setGrid(clonedAgainGrid);
+			clickedTileSet = new HashSet<Tile>();
+	
+			for (Tile tile : selectionSet) {
+				clickedTileSet.add(clonedAgainGrid.getTileAt(tile.getRow(), tile.getColumn()));
+			}
+
 			drawGrid();
 		}
 	}

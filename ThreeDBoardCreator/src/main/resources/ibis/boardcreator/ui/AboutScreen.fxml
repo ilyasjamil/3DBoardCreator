@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.aboutScreenController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.aboutScreenController">
    <top>
       <Label text="About" BorderPane.alignment="CENTER">
          <font>
@@ -25,7 +25,7 @@
                </font>
             </Text>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Developed by: Ilyas Jamil, Rijan Kafle, Elnatan Tesfa &amp; Neyel Boutkhourst" textAlignment="CENTER" />
-            <Button mnemonicParsing="false" onAction="#switchToMainEditor" text="Exit" textAlignment="CENTER" />
+            <Button fx:id="editButton" mnemonicParsing="false" onAction="#switchToMainEditor" text="Exit" textAlignment="CENTER" />
          </children>
          <opaqueInsets>
             <Insets />

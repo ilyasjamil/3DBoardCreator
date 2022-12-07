@@ -7,10 +7,14 @@ import org.junit.jupiter.api.Test;
 class TestGrid {
 
 	@Test
-	void testResize() {
+	void testResizeBigger() {
 		//mqke a new grid put data into that grid, call resize method, check that the new rows and columns are correct and that the data is still there 
 	}
 	
+	@Test
+	void testResizeSmaller() {
+		//mqke a new grid put data into that grid, call resize method, check that the new rows and columns are correct and that the data is still there 
+	}
 	
 
 }
