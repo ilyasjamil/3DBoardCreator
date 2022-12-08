@@ -36,12 +36,12 @@ public class ThreeDPreviewController extends Application {
     Camera camera = new PerspectiveCamera(true);
     camera.setNearClip(1);
     camera.setFarClip(1000);
-    camera.translateZProperty().set(-500);
+    camera.translateZProperty().set(-700);
     camera.translateXProperty().set((grid.getNumRows()/2) * 10);
     camera.translateYProperty().set((grid.getNumColumns()/2) * 10);
 
     Scene scene = new Scene(group, WIDTH, HEIGHT,true);
-    scene.setFill(Color.SILVER);
+    scene.setFill(Color.DARKOLIVEGREEN);
     scene.setCamera(camera);
 
     group.translateXProperty().set(0);

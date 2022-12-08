@@ -32,7 +32,6 @@ import javafx.stage.Stage;
 public class MainEditorController {
 
 	private Tile currentTileModified = new Tile(-1, -1, 0);
-	private Tile currentTileSelected = new Tile(-1, -1, 0);
 
 	@FXML
 	private Canvas canvasGrid;
@@ -240,12 +239,6 @@ public class MainEditorController {
 		Tile clickedTile = App.getGrid().getTileAt(r, c);
 		if (toolButtonsGroup.getSelectedToggle() == selectButton) {
 			selectButtonSelected(clickedTile);
-//		} else if (toolButtonsGroup.getSelectedToggle() == pointyTileButton){
-//			double height = 2;
-//			double numBoxes = 10;
-//			for (int i = 0; i < numBoxes; i++) {
-//				
-//			}
 		}else if (toolButtonsGroup.getSelectedToggle() != null) {
 			adjustTileHeight(clickedTile);
 		}
@@ -255,7 +248,7 @@ public class MainEditorController {
 		int c = (int) (evt.getX() / getTileSize());
 		int r = (int) (evt.getY() / getTileSize());
 		Tile dragTile = App.getGrid().getTileAt(r, c);
-		if (toolButtonsGroup.getSelectedToggle() == selectButton && dragTile != currentTileSelected) {
+		if (toolButtonsGroup.getSelectedToggle() == selectButton) {
 			selectButtonSelected(dragTile);
 		}
 		else if (dragTile != currentTileModified && toolButtonsGroup.getSelectedToggle() != selectButton
@@ -290,7 +283,6 @@ public class MainEditorController {
 	private void selectButtonSelected(Tile tile) {
 		clickedTileSet.add(tile);
 		drawGrid();
-		currentTileSelected = tile;
 	}
 
 	@FXML
