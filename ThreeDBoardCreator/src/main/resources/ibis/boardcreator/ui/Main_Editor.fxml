@@ -96,7 +96,10 @@
                         <Insets right="10.0" />
                      </GridPane.margin>
                   </ToggleButton>
-                  <Button mnemonicParsing="false" onAction="#unSelectPressed" text="Unselect Tiles" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button mnemonicParsing="false" onAction="#unSelectPressed" prefHeight="26.0" prefWidth="178.0" text="Unselect Tiles" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets right="25.0" />
+                     </GridPane.margin></Button>
                   <Button fx:id="setBtn" mnemonicParsing="false" onAction="#setPressed" prefHeight="26.0" prefWidth="121.0" text="Set Tiles" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets right="10.0" />
@@ -134,9 +137,17 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ToggleButton fx:id="resizeButton" mnemonicParsing="false" onAction="#switchToResizeChoice" prefHeight="26.0" prefWidth="101.0" text="Resize Map" toggleGroup="$toolButtonsGroup" GridPane.columnIndex="1" />
+                  <ToggleButton fx:id="resizeButton" mnemonicParsing="false" onAction="#switchToResizeChoice" prefHeight="26.0" prefWidth="101.0" text="Resize Map" toggleGroup="$toolButtonsGroup" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets right="25.0" />
+                     </GridPane.margin></ToggleButton>
                   <ToggleButton mnemonicParsing="false" onAction="#selectedARegion" prefHeight="26.0" prefWidth="100.0" text="Select Region" />
                   <ToggleButton mnemonicParsing="false" onAction="#selectHeight" prefHeight="26.0" prefWidth="99.0" text="Same Height" GridPane.rowIndex="1" />
+                  <ToggleButton fx:id="pointyTileButton" mnemonicParsing="false" onAction="#pointTileSelected" prefHeight="26.0" prefWidth="145.0" text="Pointy Tiles" toggleGroup="$toolButtonsGroup" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets right="25.0" />
+                     </GridPane.margin>
+                  </ToggleButton>
                </children>
             </GridPane>
          </children>

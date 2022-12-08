@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 public class MainEditorController {
 
 	private Tile currentTileModified = new Tile(-1, -1, 0);
+	private Tile currentTileSelected = new Tile(-1, -1, 0);
 
 	@FXML
 	private Canvas canvasGrid;
@@ -59,7 +60,10 @@ public class MainEditorController {
 	
 	@FXML
 	private ToggleButton resizeButton;
-
+	
+    @FXML
+    private ToggleButton pointyTileButton;
+    
 	@FXML
 	private ToggleGroup toolButtonsGroup;
 	
@@ -79,10 +83,9 @@ public class MainEditorController {
 
 	@FXML
 	private void initialize() {
-		Grid grid = App.getGrid();
-
 		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
 		canvasGrid.setOnMouseDragged(evt -> handleCanvasMouseDrag(evt));
+		canvasGrid.setOnMouseReleased(evt -> handleCanvasMouseReleased(evt));
 		clickedTileSet = new HashSet<>();
 		undoRedoHandler = new UndoRedoHandler(createMemento());
 		drawGrid();
@@ -103,27 +106,33 @@ public class MainEditorController {
 				double x = c * getTileSize();
 				double y = r * getTileSize();
 				Tile tile = grid.getTileAt(r, c);
-				if (clickedTileSet.contains(tile)) {
-					gc.setStroke(Color.RED);
-				} else if (toolButtonsGroup.getSelectedToggle() == clearMapBtn) {
-					tile.setElevation(0);
-					gc.setStroke(Color.CYAN);
-				} else {
-					gc.setStroke(Color.CYAN);
-				}
+				gc.setStroke(Color.CYAN);
 				gc.strokeRect(x, y, getTileSize(), getTileSize());
 				double elev = tile.getElevation();
 				double grayVal = 1 - elev / 10;
 				Color color = new Color(grayVal, grayVal, grayVal, 1);
 				gc.setFill(color);
 				gc.fillRect(x, y, getTileSize(), getTileSize());
+				if(tile.getPointy()) {
+					gc.setStroke(color.BLUE);
+					gc.strokeLine(x, y, x+getTileSize(), y+getTileSize());
+					gc.strokeLine(x, y+ getTileSize(), x+getTileSize(), y);
+					
+				}
 			}
 
 				
 
 		}
+		
+		for (Tile tile : clickedTileSet) {
+			double x = tile.getColumn()*getTileSize();
+			double y = tile.getRow()* getTileSize();
+			gc.setStroke(Color.RED);
+			gc.strokeRect(x, y, getTileSize(), getTileSize());
+		}
 	}
-
+	
 	
 
 	@FXML
@@ -163,6 +172,16 @@ public class MainEditorController {
 
 	}
 
+	@FXML
+	void pointTileSelected(ActionEvent event) {
+		for (Tile tile : clickedTileSet) {
+			tile.setPointy(true);
+		}
+		drawGrid();
+		undoRedoHandler.saveState(createMemento());
+	}
+	
+	
 	@FXML
 	void clearSelected() {
 		for (Tile tile : clickedTileSet) {
@@ -216,21 +235,38 @@ public class MainEditorController {
 	}
 
 	private void handleCanvasMousePress(MouseEvent evt) {
+		int c = (int) (evt.getX() / getTileSize());
+		int r = (int) (evt.getY() / getTileSize());
+		Tile clickedTile = App.getGrid().getTileAt(r, c);
 		if (toolButtonsGroup.getSelectedToggle() == selectButton) {
-			int c = (int) (evt.getX() / getTileSize());
-			int r = (int) (evt.getY() / getTileSize());
-			Tile clickedTile = App.getGrid().getTileAt(r, c);
-			clickedTileSet.add(clickedTile);
-			drawGrid();
-			undoRedoHandler.saveState(createMemento());
-
-		} else if (toolButtonsGroup.getSelectedToggle() != null) {
-			int c = (int) (evt.getX() / getTileSize());
-			int r = (int) (evt.getY() / getTileSize());
-			Tile clickedTile = App.getGrid().getTileAt(r, c);
+			selectButtonSelected(clickedTile);
+//		} else if (toolButtonsGroup.getSelectedToggle() == pointyTileButton){
+//			double height = 2;
+//			double numBoxes = 10;
+//			for (int i = 0; i < numBoxes; i++) {
+//				
+//			}
+		}else if (toolButtonsGroup.getSelectedToggle() != null) {
 			adjustTileHeight(clickedTile);
 		}
 	}
+		
+	private void handleCanvasMouseDrag(MouseEvent evt) {
+		int c = (int) (evt.getX() / getTileSize());
+		int r = (int) (evt.getY() / getTileSize());
+		Tile dragTile = App.getGrid().getTileAt(r, c);
+		if (toolButtonsGroup.getSelectedToggle() == selectButton && dragTile != currentTileSelected) {
+			selectButtonSelected(dragTile);
+		}
+		else if (dragTile != currentTileModified && toolButtonsGroup.getSelectedToggle() != selectButton
+				&& toolButtonsGroup.getSelectedToggle() != null) {
+			adjustTileHeight(dragTile);
+		}
+	}
+	
+	private void handleCanvasMouseReleased(MouseEvent evt) {
+		undoRedoHandler.saveState(createMemento());
+	}	
 
 	private void adjustTileHeight(Tile tile) {
 		double sliderValue = elevationSlider.getValue();
@@ -248,41 +284,32 @@ public class MainEditorController {
 		tile.setElevation(newElevation);
 		drawGrid();
 		currentTileModified = tile;
-		undoRedoHandler.saveState(createMemento());
 	}
 
-	private void handleCanvasMouseDrag(MouseEvent evt) {
-		int c = (int) (evt.getX() / getTileSize());
-		int r = (int) (evt.getY() / getTileSize());
-		Tile dragTile = App.getGrid().getTileAt(r, c);
-		if (toolButtonsGroup.getSelectedToggle() == selectButton) {
-			clickedTileSet.add(dragTile);
-			drawGrid();
-			undoRedoHandler.saveState(createMemento());
-		}
-		if (dragTile != currentTileModified && toolButtonsGroup.getSelectedToggle() != selectButton
-				&& toolButtonsGroup.getSelectedToggle() != null) {
-			adjustTileHeight(dragTile);
-		}
+
+	private void selectButtonSelected(Tile tile) {
+		clickedTileSet.add(tile);
+		drawGrid();
+		currentTileSelected = tile;
 	}
 
 	@FXML
 	void clearMapPressed(ActionEvent event) {
+		Grid grid = App.getGrid();
+		for (int r = 0; r < grid.getNumRows(); r++) {
+			for (int c = 0; c < grid.getNumColumns(); c++) {
+				grid.getTileAt(r, c).setElevation(0);
+			}
+		}
 		drawGrid();
-
 		undoRedoHandler.saveState(createMemento());
 	}
 
-	
-
-	
-
-	
 
 	@FXML
 	void openFileAction(ActionEvent event) {
 		FileChooser openChooser = new FileChooser();
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Grids (*.OBJ)", "*.OBJ");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Grids (*.MAP)", "*.MAP");
 		openChooser.getExtensionFilters().add(extFilter);
 		File inputFile = openChooser.showOpenDialog(App.getMainWindow());
 		if (inputFile != null) {
@@ -302,7 +329,7 @@ public class MainEditorController {
 	@FXML
 	void saveFileAsAction(ActionEvent event) {
 		FileChooser saveChooser = new FileChooser();
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Grids (*.MAP)", "*.OBJ");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Grids (*.MAP)", "*.MAP");
 		saveChooser.getExtensionFilters().add(extFilter);
 		File outputFile = saveChooser.showSaveDialog(App.getMainWindow());
 		if (outputFile != null) {
@@ -357,7 +384,6 @@ public class MainEditorController {
 				
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -365,6 +391,8 @@ public class MainEditorController {
 
 
 	}
+
+    
 
 	@FXML
 	void redoAction(ActionEvent event) {

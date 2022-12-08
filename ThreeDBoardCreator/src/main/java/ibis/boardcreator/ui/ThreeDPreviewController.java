@@ -56,13 +56,27 @@ public class ThreeDPreviewController extends Application {
 
   private void prepareBox(Group group) {
 	Grid grid = App.getGrid();
-    for (int row = 0;  row< grid.getNumRows(); row++) {
+    
+	for (int row = 0;  row< grid.getNumRows(); row++) {
     	for (int col = 0; col < grid.getNumColumns(); col++) {
-    		Box box = new Box(10, 10,grid.getTileAt(row, col).getElevation()*5);
+    		int offSet =0;
+    		if (grid.getTileAt(row, col).getPointy()) {
+    			offSet = 5;
+    		}
+    		Box box = new Box(10, 10,grid.getTileAt(row, col).getElevation()*5 - offSet);
     		group.getChildren().add(box);
     		box.setTranslateX(col*10);
     		box.setTranslateY(row*10);
-    		box.setTranslateZ(-grid.getTileAt(row, col).getElevation()*5 / 2);
+    		box.setTranslateZ((-grid.getTileAt(row, col).getElevation()*5 + offSet) / 2);
+    		if(grid.getTileAt(row, col).getPointy()) {
+    			for(int i=0;i<30;i++) {
+    				Box boxPointy = new Box(10-i, 10-i,grid.getTileAt(row, col).getElevation()*5 +i/2);
+    	    		group.getChildren().add(boxPointy);
+    	    		boxPointy.setTranslateX(col*10);
+    	    		boxPointy.setTranslateY(row*10);
+    	    		boxPointy.setTranslateZ((-grid.getTileAt(row, col).getElevation()*5 -i/2) / 2);
+    			}
+    		}
     	}
     }
 

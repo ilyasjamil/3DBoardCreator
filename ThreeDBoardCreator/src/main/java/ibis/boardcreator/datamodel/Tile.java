@@ -5,6 +5,7 @@ public class Tile implements Cloneable {
 	private int row;
 	private int column;
 	private double elevation;
+	private boolean pointy;
 	
     public Tile(int row, int column,  double elevation) {
         this.row = row;    
@@ -14,6 +15,14 @@ public class Tile implements Cloneable {
 
 	public int getRow() {
 		return row;
+	}
+	
+	public boolean getPointy() {
+		return pointy;
+	}
+	
+	public void setPointy(boolean isPointy) {
+		this.pointy= isPointy;
 	}
 
 	public int getColumn() {
@@ -33,6 +42,8 @@ public class Tile implements Cloneable {
 		}
 		this.elevation = newElevation;
 	}
+	
+	
    
 	@Override
 	public Tile clone() {

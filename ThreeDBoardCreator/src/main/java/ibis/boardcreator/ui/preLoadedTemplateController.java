@@ -59,51 +59,51 @@ public class preLoadedTemplateController {
 
     @FXML
     void switchToMountains(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
-    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("mountains.OBJ"));
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("mountains.MAP"));
     	drawSelected();
     }
     
 
     @FXML
     void switchToBuildings(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
-    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("buildings.OBJ"));
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("buildings.MAP"));
     	drawSelected();
     }
 
 
     @FXML
     void switchToMaze(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
-    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("maze.OBJ"));
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("maze.MAP"));
     	drawSelected();
     }
 
     @FXML
     void switchToRailroads(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
-    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("railroads.OBJ"));
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("railroads.MAP"));
     	drawSelected();
     }
 
     @FXML
     void switchToRoads(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
-    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("roads.OBJ"));
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("roads.MAP"));
     	drawSelected();
     }
 
     @FXML
     void switchToStadium(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
-    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("stadium.OBJ"));
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("stadium.MAP"));
     	drawSelected();
     }
 
     @FXML
     void switchToValleys(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
-    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("valley.OBJ"));
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("valley.MAP"));
     	drawSelected();
     }
 
     @FXML
     void switchToVolcanoes(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
-    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("volcano.OBJ"));
+    	selectedGrid = GridIO.load2dMapFromJSONFile(new File("volcano.MAP"));
     	drawSelected();
     }
     
