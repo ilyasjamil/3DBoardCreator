@@ -10,7 +10,9 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -19,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="849.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.MainEditorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="849.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.MainEditorController">
    <top>
       <MenuBar prefHeight="29.0" prefWidth="615.0" BorderPane.alignment="CENTER">
         <menus>
@@ -27,18 +29,36 @@
             <items>
                   <Menu mnemonicParsing="false" text="New project">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#switchToPreloadedScreen" text="Preloaded template" />
-                        <MenuItem mnemonicParsing="false" onAction="#switchToEmptyGrid" text="Empty board" />
+                      <MenuItem mnemonicParsing="false" onAction="#switchToPreloadedScreen" text="Preloaded template">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="T" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#switchToEmptyGrid" text="Empty board">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
                     </items>
                   </Menu>
-                  <MenuItem mnemonicParsing="false" onAction="#openFileAction" text="Open" />
-                  <MenuItem mnemonicParsing="false" onAction="#saveFileAsAction" text="Save" />
-                  <MenuItem mnemonicParsing="false" onAction="#exportOBJAction" text="export" />
+                  <MenuItem mnemonicParsing="false" onAction="#openFileAction" text="Open">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#saveFileAsAction" text="Save">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#exportOBJAction" text="export">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Preview">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#switchToThreeDPreview" text="preview 3D" />
+              <MenuItem mnemonicParsing="false" onAction="#switchToThreeDPreview" text="preview 3D">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -105,17 +125,20 @@
                         <Insets right="10.0" />
                      </GridPane.margin>
                   </Button>
-                  <ToggleButton mnemonicParsing="false" onAction="#clearSelected" prefHeight="26.0" prefWidth="131.0" text="Clear Tiles" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <ToggleButton fx:id="clearTilesBtn" mnemonicParsing="false" onAction="#clearSelected" prefHeight="26.0" prefWidth="131.0" text="Clear Tiles" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets right="25.0" />
                      </GridPane.margin>
+                     <tooltip>
+                        <Tooltip text="Clear the currently selected tiles (ALT+X)" />
+                     </tooltip>
                   </ToggleButton>
-                  <Button mnemonicParsing="false" onAction="#redoAction" prefHeight="26.0" prefWidth="156.0" text="Redo" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <Button fx:id="redoBtn" mnemonicParsing="false" onAction="#redoAction" prefHeight="26.0" prefWidth="156.0" text="Redo" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets right="25.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#undoAction" prefHeight="26.0" prefWidth="135.0" text="Undo" GridPane.rowIndex="3">
+                  <Button fx:id="undoBtn" mnemonicParsing="false" onAction="#undoAction" prefHeight="26.0" prefWidth="135.0" text="Undo" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets right="10.0" />
                      </GridPane.margin>
@@ -165,6 +188,9 @@
                <VBox.margin>
                   <Insets bottom="10.0" left="350.0" />
                </VBox.margin>
+               <tooltip>
+                  <Tooltip text="reset the map (ALT+D)" />
+               </tooltip>
             </ToggleButton>
          </children></VBox>
    </bottom>

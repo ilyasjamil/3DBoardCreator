@@ -8,11 +8,11 @@ import javafx.scene.control.TextField;
 
 public class aboutScreenController {
 	@FXML
-	private Button editButton;
+	private Button exitButton;
 	
 	
 	@FXML
     private void switchToMainEditor() throws IOException {
-        editButton.getScene().getWindow().hide();
+        exitButton.getScene().getWindow().hide();
     }
 }

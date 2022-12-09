@@ -8,6 +8,7 @@ import java.util.HashSet;
 import ibis.boardcreator.datamodel.Grid;
 import ibis.boardcreator.datamodel.GridIO;
 import ibis.boardcreator.datamodel.Tile;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +24,11 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
+import javafx.scene.input.KeyCharacterCombination;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.Mnemonic;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -66,7 +72,12 @@ public class MainEditorController {
 	@FXML
 	private ToggleGroup toolButtonsGroup;
 	
-
+	@FXML
+	private Button undoBtn;
+	
+	@FXML
+	private Button redoBtn;
+	
 	@FXML
 	private Menu aboutScreen;
 
@@ -79,6 +90,9 @@ public class MainEditorController {
 
 	@FXML
 	private TextField numRows;
+	
+	@FXML
+	private ToggleButton clearTilesBtn;
 
 	@FXML
 	private void initialize() {
@@ -88,7 +102,14 @@ public class MainEditorController {
 		clickedTileSet = new HashSet<>();
 		undoRedoHandler = new UndoRedoHandler(createMemento());
 		drawGrid();
+		Platform.runLater(new Runnable() {
+		    public void run() {
+		        initShortcuts();
+		    }
+		});
+
 	}
+	
 	
 	private double getTileSize() {
 		Grid grid = App.getGrid();
@@ -225,6 +246,7 @@ public class MainEditorController {
 		}
 		undoRedoHandler.saveState(createMemento());
 	}
+	
 
 	@FXML
 	public void unSelectPressed() {
@@ -416,9 +438,10 @@ public class MainEditorController {
 	private void switchToAboutScreen() throws IOException {
 		//App.setRoot("AboutScreen");
 		Stage aboutScreenDialog = new Stage();
+		aboutScreenDialog.setResizable(false);
 		FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("AboutScreen.fxml"));
         Parent root = fxmlLoader.load();
-        Scene aboutScreenScene = new Scene(root, 840, 680);
+        Scene aboutScreenScene = new Scene(root, 600, 400);
         aboutScreenDialog.setScene(aboutScreenScene);
         aboutScreenDialog.initOwner(App.getMainWindow());
         aboutScreenDialog.initModality(Modality.APPLICATION_MODAL); 
@@ -453,6 +476,55 @@ public class MainEditorController {
 		resizeDialog.initModality(Modality.APPLICATION_MODAL); 
 		resizeDialog.showAndWait();
 		drawGrid();
+	}
+	private void initShortcuts() {
+		//ALT+D to clear the map
+		clearMapBtn.getScene().getAccelerators().put(
+				  new KeyCodeCombination(KeyCode.D, KeyCombination.ALT_DOWN), 
+				  new Runnable() {
+				    @Override public void run() {
+				      clearMapBtn.fire();
+				    }
+				  }
+				);
+		//ALT+X to delete a selection
+		clearTilesBtn.getScene().getAccelerators().put(
+				  new KeyCodeCombination(KeyCode.X, KeyCombination.ALT_DOWN), 
+				  new Runnable() {
+				    @Override public void run() {
+				      clearTilesBtn.fire();
+				    }
+				  }
+				);
+		//ALT+S to select
+		selectButton.getScene().getAccelerators().put(
+				  new KeyCodeCombination(KeyCode.S, KeyCombination.ALT_DOWN), 
+				  new Runnable() {
+				    @Override public void run() {
+				      selectButton.fire();
+				    }
+				  }
+				);
+		//ALT+Z to undo
+		undoBtn.getScene().getAccelerators().put(
+				  new KeyCodeCombination(KeyCode.Z, KeyCombination.ALT_DOWN), 
+				  new Runnable() {
+				    @Override public void run() {
+				      undoBtn.fire();
+				    }
+				  }
+				);
+		//ALT+R to redo
+		redoBtn.getScene().getAccelerators().put(
+				  new KeyCodeCombination(KeyCode.R, KeyCombination.ALT_DOWN), 
+				  new Runnable() {
+				    @Override public void run() {
+				      redoBtn.fire();
+				    }
+				  }
+				);
+		
+		
 	}
 	
 

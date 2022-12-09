@@ -1,5 +1,4 @@
 package ibis.boardcreator.ui;
-
 import javafx.application.Application;
 
 import javafx.fxml.FXMLLoader;
@@ -46,7 +45,7 @@ public class App extends Application {
         return fxmlLoader.load();
     }
     
-    public static Stage getMainWindow() {
+	public static Stage getMainWindow() {
     	return mainWindow;
     }
 
