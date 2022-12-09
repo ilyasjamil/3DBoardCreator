@@ -313,12 +313,8 @@ public class MainEditorController {
 		for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumColumns(); c++) {
 				grid.getTileAt(r, c).setElevation(0);
-				if (grid.getTileAt(r, c).getPointy()) {
-					grid.getTileAt(r, c).setPointy(false);
-				}
 			}
 		}
-		clickedTileSet.clear();
 		drawGrid();
 		undoRedoHandler.saveState(createMemento());
 	}
@@ -464,6 +460,7 @@ public class MainEditorController {
 	
 	@FXML
 	private void switchToResizeChoice() throws IOException {
+		//App.setRoot("ResizeChoiceController");
 		Stage resizeDialog = new Stage();
 
 		// populate dialog with controls.
@@ -476,6 +473,7 @@ public class MainEditorController {
 		resizeDialog.initModality(Modality.APPLICATION_MODAL); 
 		resizeDialog.showAndWait();
 		drawGrid();
+	undoRedoHandler.saveState(createMemento());
 	}
 	private void initShortcuts() {
 		//ALT+D to clear the map
