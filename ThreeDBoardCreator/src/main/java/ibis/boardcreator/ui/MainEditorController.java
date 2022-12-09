@@ -194,21 +194,25 @@ public class MainEditorController {
 
 	@FXML
 	void pointTileSelected(ActionEvent event) {
-		for (Tile tile : clickedTileSet) {
-			tile.setPointy(true);
+		if(!clickedTileSet.isEmpty()) {
+			for (Tile tile : clickedTileSet) {
+				tile.setPointy(true);
+			}
+			drawGrid();
 		}
-		drawGrid();
 		undoRedoHandler.saveState(createMemento());
 	}
 	
 	
 	@FXML
 	void clearSelected() {
-		for (Tile tile : clickedTileSet) {
-			tile.setElevation(0);
+		if (!clickedTileSet.isEmpty()) {
+			for (Tile tile : clickedTileSet) {
+				tile.setElevation(0);
+			}
+			drawGrid();
+			undoRedoHandler.saveState(createMemento());
 		}
-		drawGrid();
-		undoRedoHandler.saveState(createMemento());
 	}
 
 	
@@ -460,6 +464,7 @@ public class MainEditorController {
 	
 	@FXML
 	private void switchToResizeChoice() throws IOException {
+		clickedTileSet.clear();
 		//App.setRoot("ResizeChoiceController");
 		Stage resizeDialog = new Stage();
 
