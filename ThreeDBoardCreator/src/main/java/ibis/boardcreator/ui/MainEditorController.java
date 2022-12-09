@@ -23,6 +23,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Menu;
 import javafx.scene.input.KeyCharacterCombination;
 import javafx.scene.input.KeyCode;
@@ -87,6 +88,9 @@ public class MainEditorController {
 	
 	@FXML
 	private TextField numColumns;
+	
+	@FXML
+	private ComboBox<String> featuresComboBox;
 
 	@FXML
 	private TextField numRows;
@@ -101,6 +105,9 @@ public class MainEditorController {
 		canvasGrid.setOnMouseReleased(evt -> handleCanvasMouseReleased(evt));
 		clickedTileSet = new HashSet<>();
 		undoRedoHandler = new UndoRedoHandler(createMemento());
+		featuresComboBox.getItems().add("Mountains");
+		featuresComboBox.getItems().add("Pitt");
+		featuresComboBox.getItems().add("Volcanos");
 		drawGrid();
 		Platform.runLater(new Runnable() {
 		    public void run() {
@@ -310,7 +317,37 @@ public class MainEditorController {
 		clickedTileSet.add(tile);
 		drawGrid();
 	}
+	
+	@FXML
+	void addFeatureAction(ActionEvent event) {
+		int r;
+		int c;
+		int[][] feature;
+		if (clickedTileSet.size() != 0) {
+			for (Tile tile : clickedTileSet) {
+				r = tile.getRow();
+				c = tile.getColumn();
+				if (featuresComboBox.getValue().equals("Mountains")) {
+					feature = Features.getMountain();
+				} else if (featuresComboBox.getValue().equals("Pitt")) {
+					feature = Features.getPit();
+				} else {
+					feature = Features.getVolcanos();
+				}
 
+				for (int i = r; i < r + feature.length; i++) {
+					for (int j = c; j < c + feature[0].length; j++) {
+						App.getGrid().getTileAt(i, j).setElevation(feature[i - r][j - c]);
+					}
+				}
+			}
+			drawGrid();
+			undoRedoHandler.saveState(createMemento());
+
+		}
+
+	}
+	
 	@FXML
 	void clearMapPressed(ActionEvent event) {
 		Grid grid = App.getGrid();
