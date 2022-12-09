@@ -158,7 +158,7 @@ public class MainEditorController {
 	@FXML
 	void selectedARegion() {
 		Grid grid = App.getGrid();
-		if (clickedTileSet.size() == 2) {
+		if (clickedTileSet.size() != 2) {
 			int startRow = 1000;
 			int endRow = -1;
 			int startCol = 1000;
@@ -499,18 +499,9 @@ public class MainEditorController {
 				    }
 				  }
 				);
-		//ALT+S to select
-		selectButton.getScene().getAccelerators().put(
-				  new KeyCodeCombination(KeyCode.S, KeyCombination.ALT_DOWN), 
-				  new Runnable() {
-				    @Override public void run() {
-				      selectButton.fire();
-				    }
-				  }
-				);
 		//ALT+Z to undo
 		undoBtn.getScene().getAccelerators().put(
-				  new KeyCodeCombination(KeyCode.Z, KeyCombination.ALT_DOWN), 
+				  new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN), 
 				  new Runnable() {
 				    @Override public void run() {
 				      undoBtn.fire();
@@ -519,7 +510,7 @@ public class MainEditorController {
 				);
 		//ALT+R to redo
 		redoBtn.getScene().getAccelerators().put(
-				  new KeyCodeCombination(KeyCode.R, KeyCombination.ALT_DOWN), 
+				  new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN), 
 				  new Runnable() {
 				    @Override public void run() {
 				      redoBtn.fire();

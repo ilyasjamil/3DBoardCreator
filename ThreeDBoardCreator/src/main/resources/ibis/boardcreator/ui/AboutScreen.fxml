@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.aboutScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.aboutScreenController">
    <children>
       <Label alignment="CENTER" layoutX="257.0" layoutY="14.0" text="About" textAlignment="CENTER">
          <font>
@@ -18,16 +18,21 @@
             <Font name="System Bold Italic" size="12.0" />
          </font>
       </Label>
-      <Label alignment="TOP_LEFT" layoutX="115.0" layoutY="222.0" prefHeight="18.0" prefWidth="191.0" text="Redo (ALT+R)" />
-      <Label alignment="TOP_LEFT" layoutX="115.0" layoutY="150.0" prefHeight="18.0" prefWidth="191.0" text="reset the map (ALT+D)" />
-      <Label alignment="TOP_LEFT" layoutX="115.0" layoutY="168.0" prefHeight="18.0" prefWidth="191.0" text="Delete selection (ALT+X)" />
-      <Label alignment="TOP_LEFT" layoutX="115.0" layoutY="186.0" prefHeight="18.0" prefWidth="191.0" text="Select tiles (ALT+S)" />
-      <Label alignment="TOP_LEFT" layoutX="115.0" layoutY="204.0" prefHeight="18.0" prefWidth="191.0" text="Undo (ALT+Z)" />
-      <Label alignment="TOP_LEFT" layoutX="376.0" layoutY="204.0" prefHeight="18.0" prefWidth="191.0" text="Preview 3D view (CTRL+P)" />
-      <Label alignment="TOP_LEFT" layoutX="376.0" layoutY="186.0" prefHeight="18.0" prefWidth="191.0" text="Save file (CTRL+S)" />
-      <Label alignment="TOP_LEFT" layoutX="376.0" layoutY="222.0" prefHeight="18.0" prefWidth="191.0" text="Export file (CTRL+E)" />
-      <Label alignment="TOP_LEFT" layoutX="376.0" layoutY="150.0" prefHeight="18.0" prefWidth="155.0" text="Create empty grid (CTRL+N)" />
-      <Label alignment="TOP_LEFT" layoutX="376.0" layoutY="168.0" prefHeight="18.0" prefWidth="191.0" text="Choose a template (CTRL+T)" />
+      <Label alignment="TOP_LEFT" layoutX="115.0" layoutY="204.0" prefHeight="18.0" prefWidth="191.0" text="Redo (CTRL+Y)" />
+      <Label alignment="TOP_LEFT" layoutX="115.0" layoutY="150.0" prefHeight="18.0" prefWidth="191.0" text="Reset the map (ALT+D)" />
+      <Label alignment="TOP_LEFT" layoutX="115.0" layoutY="186.0" prefHeight="18.0" prefWidth="191.0" text="Undo (CTRL+Z)" />
+      <Label alignment="TOP_LEFT" layoutX="376.0" layoutY="186.0" prefHeight="18.0" prefWidth="191.0" text="Preview 3D view (CTRL+P)" />
+      <Label alignment="TOP_LEFT" layoutX="376.0" layoutY="168.0" prefHeight="18.0" prefWidth="191.0" text="Save file (CTRL+S)" />
+      <Label alignment="TOP_LEFT" layoutX="376.0" layoutY="204.0" prefHeight="18.0" prefWidth="191.0" text="Export file (CTRL+E)" />
+      <Label alignment="TOP_LEFT" layoutX="115.0" layoutY="168.0" prefHeight="18.0" prefWidth="155.0" text="Create empty grid (CTRL+N)" />
+      <Label alignment="TOP_LEFT" layoutX="376.0" layoutY="150.0" prefHeight="18.0" prefWidth="191.0" text="Choose a template (CTRL+T)" />
       <Button fx:id="exitButton" layoutX="282.0" layoutY="333.0" mnemonicParsing="false" onAction="#switchToMainEditor" text="Exit" />
+      <Label alignment="TOP_LEFT" layoutX="127.0" layoutY="264.0" prefHeight="18.0" prefWidth="425.0" text="Developed by: Elnatan Tesfa, Ilyas Jamil, Neyel Boutkhourst, Rijan Kafle " />
+      <Label alignment="TOP_LEFT" layoutX="199.0" layoutY="282.0" prefHeight="18.0" prefWidth="213.0" text="Project Supervisor: Forrest Stonedahl" />
+      <Label alignment="TOP_LEFT" layoutX="31.0" layoutY="336.0" prefHeight="18.0" prefWidth="213.0" text="CSC 305 Augustana College">
+         <font>
+            <Font name="System Bold Italic" size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

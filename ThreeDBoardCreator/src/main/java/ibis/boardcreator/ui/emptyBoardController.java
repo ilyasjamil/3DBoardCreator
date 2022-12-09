@@ -3,6 +3,7 @@ package ibis.boardcreator.ui;
 import java.io.IOException;
 
 import ibis.boardcreator.datamodel.Grid;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -28,5 +29,11 @@ public class emptyBoardController {
 			alert.show();
 		}
         
+    }
+	
+	@FXML
+    void switchToMain(ActionEvent event) throws IOException {
+    	App.setRoot("Main_Editor");
+    	
     }
 }

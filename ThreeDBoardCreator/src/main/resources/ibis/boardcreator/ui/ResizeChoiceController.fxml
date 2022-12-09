@@ -63,7 +63,12 @@
       </SplitPane>
       <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#switchToModifiedMainEditor" prefHeight="38.0" prefWidth="108.0" text="Next">
          <VBox.margin>
-            <Insets left="220.0" top="20.0" />
+            <Insets />
          </VBox.margin></Button>
+      <Button alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="268.0" mnemonicParsing="false" onAction="#switchToMain" prefHeight="38.0" prefWidth="108.0" text="Back">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </Button>
    </children>
 </VBox>
