@@ -52,9 +52,9 @@ public class MainEditorController {
 	@FXML
 	private Button setBtn;
 
-	@FXML
-	private ToggleButton unselectBtn;
-
+    @FXML
+    private Button clearTilesBtn;
+	
 	@FXML
 	private ToggleButton clearMapBtn;
 
@@ -68,7 +68,7 @@ public class MainEditorController {
 	private ToggleButton resizeButton;
 	
     @FXML
-    private ToggleButton pointyTileButton;
+    private Button pointyTileButton;
     
 	@FXML
 	private ToggleGroup toolButtonsGroup;
@@ -95,8 +95,6 @@ public class MainEditorController {
 	@FXML
 	private TextField numRows;
 	
-	@FXML
-	private ToggleButton clearTilesBtn;
 
 	@FXML
 	private void initialize() {
@@ -108,6 +106,8 @@ public class MainEditorController {
 		featuresComboBox.getItems().add("Mountains");
 		featuresComboBox.getItems().add("Pitt");
 		featuresComboBox.getItems().add("Volcanos");
+		clearMapBtn.setStyle("-fx-background-color: #32a5cb");
+		resizeButton.setStyle("-fx-background-color: #7ababb");
 		drawGrid();
 		Platform.runLater(new Runnable() {
 		    public void run() {
@@ -123,7 +123,7 @@ public class MainEditorController {
 		return canvasGrid.getHeight() / Math.max(grid.getNumColumns(), grid.getNumRows());
 	}
 
-	// draws grid
+	
 	private void drawGrid() {
 		Grid grid = App.getGrid();	
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
@@ -161,47 +161,49 @@ public class MainEditorController {
 	}
 	
 	
-
+	
 	@FXML
 	void selectedARegion() {
 		Grid grid = App.getGrid();
 		if (clickedTileSet.size() != 2) {
-			int startRow = 1000;
-			int endRow = -1;
-			int startCol = 1000;
-			int endCol = -1;
-			for (Tile tile : clickedTileSet) {
-				if (tile.getRow() > endRow) {
-					endRow = tile.getRow();
+			new Alert(AlertType.ERROR, "Select two tiles to create a region.").showAndWait();
+		}else {
+				int startRow = 1000;
+				int endRow = -1;
+				int startCol = 1000;
+				int endCol = -1;
+				for (Tile tile : clickedTileSet) {
+					if (tile.getRow() > endRow) {
+						endRow = tile.getRow();
+					}
+					if (tile.getRow() < startRow) {
+						startRow = tile.getRow();
+					}
+					if (tile.getColumn() > endCol) {
+						endCol = tile.getColumn();
+					}
+					if (tile.getColumn() < startCol) {
+						startCol = tile.getColumn();
+					}
 				}
-				if (tile.getRow() < startRow) {
-					startRow = tile.getRow();
-				}
-				if (tile.getColumn() > endCol) {
-					endCol = tile.getColumn();
-				}
-				if (tile.getColumn() < startCol) {
-					startCol = tile.getColumn();
+				for (int r = startRow; r <= endRow; r++) {
+					for (int c = startCol; c <= endCol; c++) {
+						clickedTileSet.add(grid.getTileAt(r, c));
+						
+					}
 				}
 			}
-			for (int r = startRow; r <= endRow; r++) {
-				for (int c = startCol; c <= endCol; c++) {
-
-					clickedTileSet.add(grid.getTileAt(r, c));
-					drawGrid();
-				}
-			}
-
+			drawGrid();
+			undoRedoHandler.saveState(createMemento());
+			
 		}
 
-		drawGrid();
-		undoRedoHandler.saveState(createMemento());
-
-	}
 
 	@FXML
-	void pointTileSelected(ActionEvent event) {
-		if(!clickedTileSet.isEmpty()) {
+	void pointyTileSelected(ActionEvent event) {
+		if(clickedTileSet.isEmpty()) {
+			new Alert(AlertType.ERROR, "Select atleast one tile.").showAndWait();
+		}else {
 			for (Tile tile : clickedTileSet) {
 				tile.setPointy(true);
 			}
@@ -213,7 +215,9 @@ public class MainEditorController {
 	
 	@FXML
 	void clearSelected() {
-		if (!clickedTileSet.isEmpty()) {
+		if (clickedTileSet.isEmpty()) {
+			new Alert(AlertType.ERROR, "Select atleast one tile.").showAndWait();
+		}else {
 			for (Tile tile : clickedTileSet) {
 				tile.setElevation(0);
 			}
@@ -226,7 +230,9 @@ public class MainEditorController {
 
 	@FXML
 	void setPressed(ActionEvent event) {
-		if (!clickedTileSet.isEmpty()) {
+		if (clickedTileSet.isEmpty()) {
+			new Alert(AlertType.ERROR, "Select atleast one tile.").showAndWait();
+		}else {
 			for (Tile tile : clickedTileSet) {
 				double newElevation = elevationSlider.getValue();
 				tile.setElevation(newElevation);
@@ -241,52 +247,65 @@ public class MainEditorController {
 	public void selectHeight() {
 		Grid grid = App.getGrid();
 		HashSet<Double> selectHeights = new HashSet<>();
-		if (clickedTileSet.size() == 1) {
+		if (clickedTileSet.size() != 1) {
+			new Alert(AlertType.ERROR, "Select one tile to see all tiles with same height.").showAndWait();
+		}else {
 			for (Tile tile : clickedTileSet) {
 				selectHeights.add(tile.getElevation());
 			}
-		}
-		for (int r = 0; r < grid.getNumRows(); r++) {
-
-			for (int c = 0; c < grid.getNumColumns(); c++) {
-				if (selectHeights.contains(grid.getTileAt(r, c).getElevation())) {
-					clickedTileSet.add(grid.getTileAt(r, c));
-					drawGrid();
+			for (int r = 0; r < grid.getNumRows(); r++) {
+				for (int c = 0; c < grid.getNumColumns(); c++) {
+					if (selectHeights.contains(grid.getTileAt(r, c).getElevation())) {
+						clickedTileSet.add(grid.getTileAt(r, c));
+						drawGrid();
+					}
 				}
 			}
+			undoRedoHandler.saveState(createMemento());
 		}
-		undoRedoHandler.saveState(createMemento());
+		
 	}
 	
 
 	@FXML
 	public void unSelectPressed() {
-		clickedTileSet.clear();
-		drawGrid();
-		undoRedoHandler.saveState(createMemento());
+		if (clickedTileSet.isEmpty()) {
+			new Alert(AlertType.ERROR, "There are no selected tiles.").showAndWait();
+		}else {
+			clickedTileSet.clear();
+			drawGrid();
+			undoRedoHandler.saveState(createMemento());
+		}
 	}
 
 	private void handleCanvasMousePress(MouseEvent evt) {
 		int c = (int) (evt.getX() / getTileSize());
 		int r = (int) (evt.getY() / getTileSize());
 		Tile clickedTile = App.getGrid().getTileAt(r, c);
-		if (toolButtonsGroup.getSelectedToggle() == selectButton) {
+		ToggleButton buttonClicked = (ToggleButton) toolButtonsGroup.getSelectedToggle();
+		if (buttonClicked == selectButton) {
 			selectButtonSelected(clickedTile);
-		}else if (toolButtonsGroup.getSelectedToggle() != null) {
+		}else if (buttonClicked != null) {			
 			adjustTileHeight(clickedTile);
 		}
 	}
 		
 	private void handleCanvasMouseDrag(MouseEvent evt) {
-		int c = (int) (evt.getX() / getTileSize());
-		int r = (int) (evt.getY() / getTileSize());
-		Tile dragTile = App.getGrid().getTileAt(r, c);
-		if (toolButtonsGroup.getSelectedToggle() == selectButton) {
-			selectButtonSelected(dragTile);
-		}
-		else if (dragTile != currentTileModified && toolButtonsGroup.getSelectedToggle() != selectButton
-				&& toolButtonsGroup.getSelectedToggle() != null) {
-			adjustTileHeight(dragTile);
+		try {
+			int c = (int) (evt.getX() / getTileSize());
+			int r = (int) (evt.getY() / getTileSize());
+			Tile dragTile = App.getGrid().getTileAt(r, c);
+			ToggleButton buttonClicked = (ToggleButton) toolButtonsGroup.getSelectedToggle();
+			if (buttonClicked == selectButton) {
+				selectButtonSelected(dragTile);
+			}
+			else if (dragTile != currentTileModified && buttonClicked != selectButton
+					&& buttonClicked != null) {
+				adjustTileHeight(dragTile);
+			}
+		}catch(ArrayIndexOutOfBoundsException ex) {
+			new Alert(AlertType.ERROR, "Please only drag inside the grid").showAndWait();
+
 		}
 	}
 	
@@ -297,9 +316,10 @@ public class MainEditorController {
 	private void adjustTileHeight(Tile tile) {
 		double sliderValue = elevationSlider.getValue();
 		double newElevation = 0;
-		if (toolButtonsGroup.getSelectedToggle() == raiseElevationButton) {
+		ToggleButton buttonClicked = (ToggleButton) toolButtonsGroup.getSelectedToggle();
+		if (buttonClicked == raiseElevationButton) {
 			newElevation = tile.getElevation() + sliderValue;
-		} else if (toolButtonsGroup.getSelectedToggle() == lowerElevationButton) {
+		} else if (buttonClicked == lowerElevationButton) {
 			newElevation = tile.getElevation() - sliderValue;
 		}
 		if (newElevation >= 10) {
@@ -319,26 +339,33 @@ public class MainEditorController {
 	}
 	
 	@FXML
-	void addFeatureAction(ActionEvent event) {
+	void addFeatureAction(ActionEvent event){
 		int r;
 		int c;
 		int[][] feature;
-		if (clickedTileSet.size() != 0) {
+		if (clickedTileSet.size() == 0) {
+			new Alert(AlertType.ERROR, "Select atleast one tile").showAndWait();
+		}else {
 			for (Tile tile : clickedTileSet) {
 				r = tile.getRow();
 				c = tile.getColumn();
-				if (featuresComboBox.getValue().equals("Mountains")) {
-					feature = Features.getMountain();
-				} else if (featuresComboBox.getValue().equals("Pitt")) {
-					feature = Features.getPit();
-				} else {
-					feature = Features.getVolcanos();
-				}
-
-				for (int i = r; i < r + feature.length; i++) {
-					for (int j = c; j < c + feature[0].length; j++) {
-						App.getGrid().getTileAt(i, j).setElevation(feature[i - r][j - c]);
+				try {
+					if (featuresComboBox.getValue().equals("Mountains")) {
+						feature = Features.getMountain();
+					} else if (featuresComboBox.getValue().equals("Pitt")) {
+						feature = Features.getPit();
+					} else {
+						feature = Features.getVolcanos();
 					}
+					for (int i = r; i < r + feature.length; i++) {
+						for (int j = c; j < c + feature[0].length; j++) {
+							App.getGrid().getTileAt(i, j).setElevation(feature[i - r][j - c]);
+						}
+					}
+				}catch(ArrayIndexOutOfBoundsException ex){
+					new Alert(AlertType.ERROR, "Cannot draw the feature in this area").showAndWait();
+				}catch(NullPointerException ex) {
+					new Alert(AlertType.ERROR, "Select a feature from the drop down").showAndWait();
 				}
 			}
 			drawGrid();
@@ -350,10 +377,12 @@ public class MainEditorController {
 	
 	@FXML
 	void clearMapPressed(ActionEvent event) {
+		clickedTileSet.clear();
 		Grid grid = App.getGrid();
 		for (int r = 0; r < grid.getNumRows(); r++) {
 			for (int c = 0; c < grid.getNumColumns(); c++) {
 				grid.getTileAt(r, c).setElevation(0);
+				grid.getTileAt(r, c).setPointy(false);
 			}
 		}
 		drawGrid();
@@ -515,7 +544,7 @@ public class MainEditorController {
 		resizeDialog.initModality(Modality.APPLICATION_MODAL); 
 		resizeDialog.showAndWait();
 		drawGrid();
-	undoRedoHandler.saveState(createMemento());
+		undoRedoHandler.saveState(createMemento());
 	}
 	private void initShortcuts() {
 		//ALT+D to clear the map
@@ -536,7 +565,7 @@ public class MainEditorController {
 				    }
 				  }
 				);
-		//ALT+Z to undo
+		//CTRL+Z to undo
 		undoBtn.getScene().getAccelerators().put(
 				  new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN), 
 				  new Runnable() {
@@ -545,7 +574,7 @@ public class MainEditorController {
 				    }
 				  }
 				);
-		//ALT+R to redo
+		//CTRL+R to redo
 		redoBtn.getScene().getAccelerators().put(
 				  new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN), 
 				  new Runnable() {

@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="292.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.emptyBoardController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ibis.boardcreator.ui.emptyBoardController">
    <children>
-      <Label alignment="CENTER" prefHeight="57.0" prefWidth="600.0" text="Enter desired number of rows and columns for your Grid Map">
+      <Label alignment="CENTER" prefHeight="52.0" prefWidth="610.0" text="Enter desired number of rows and columns for your Grid Map">
          <font>
             <Font name="System Bold Italic" size="17.0" />
          </font>
