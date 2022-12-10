@@ -3,15 +3,16 @@ package ibis.boardcreator.ui;
 public class Features {
 	private static final int[][] MOUNTAIN = { { 2, 2, 2 }, { 2, 6, 2 }, { 2, 2, 2 } };
 
-	private static final int[][] PIT = { { 6, 6, 6 }, { 6, 2, 6 }, { 6, 6, 6 } };
+	private static final int[][] PIT = { { 6, 6, 6 }, { 6, 0, 6 }, { 6, 6, 6 } };
 
-	private static final int[][] VOLCANOS = { { 4, 4, 4, 4, 4 }, { 4, 6, 6, 6, 4 }, { 4, 6, 1, 6, 4 },
+	private static final int[][] VOLCANO = { { 4, 4, 4, 4, 4 }, { 4, 6, 6, 6, 4 }, { 4, 6, 1, 6, 4 },
+
 			{ 4, 6, 6, 6, 4 }, { 4, 4, 4, 4, 4 } };
 
 	private static final int[][] AugieA = { { 0, 2, 2, 0 }, { 2, 0, 0, 2 }, { 2, 0, 0, 2 }, { 2, 2, 2, 2 },
 			{ 2, 0, 0, 2 }, { 2, 0, 0, 2 } };
-	
-	private static final int[][] Road = {{1,1},{1,1},{1,1},{1,1},{1,1}};
+
+	private static final int[][] Road = { { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
 
 	/**
 	 * @return the road
@@ -28,6 +29,9 @@ public class Features {
 	}
 
 	/**
+	 * returns the mountain which is a 2D array of elevations of the tiles to be
+	 * drawn on the grid which represents the mountain.
+	 * 
 	 * @return the mountain
 	 */
 	public static int[][] getMountain() {
@@ -35,6 +39,9 @@ public class Features {
 	}
 
 	/**
+	 * returns the pit which is a 2D array of elevations of the tiles to be drawn on
+	 * the grid which represents the pit.
+	 * 
 	 * @return the pit
 	 */
 	public static int[][] getPit() {
@@ -42,9 +49,13 @@ public class Features {
 	}
 
 	/**
-	 * @return the volcanos
+	 * returns the volcano which is a 2D array of elevations of the tiles to be
+	 * drawn on the grid which represents the volcano.
+	 * 
+	 * @return the volcano
 	 */
-	public static int[][] getVolcanos() {
-		return VOLCANOS;
+	public static int[][] getVolcano() {
+		return VOLCANO;
 	}
+
 }

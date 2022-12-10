@@ -23,6 +23,9 @@ public class preLoadedTemplateController {
     
     private Grid selectedGrid;
     
+    /**
+	 * draws the selected template on the canvas
+	 */
     private void drawSelected() {
     	double TILE_SIZE = canvasGridDisplay.getHeight()/Math.max(selectedGrid.getNumColumns(), selectedGrid.getNumRows());
     	GraphicsContext gc = canvasGridDisplay.getGraphicsContext2D();

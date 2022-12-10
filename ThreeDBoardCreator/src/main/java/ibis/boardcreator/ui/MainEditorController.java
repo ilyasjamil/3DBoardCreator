@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import ibis.boardcreator.datamodel.Grid;
 import ibis.boardcreator.datamodel.GridIO;
@@ -25,11 +26,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Menu;
-import javafx.scene.input.KeyCharacterCombination;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.Mnemonic;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -95,10 +94,11 @@ public class MainEditorController {
 	@FXML
 	private TextField numRows;
 
+	/**
+	 * Initialize the controller
+	 */
 	@FXML
 	private void initialize() {
-		Grid grid = App.getGrid();
-		System.out.print(grid.toString());
 		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
 		canvasGrid.setOnMouseDragged(evt -> handleCanvasMouseDrag(evt));
 		canvasGrid.setOnMouseReleased(evt -> handleCanvasMouseReleased(evt));
@@ -120,10 +120,24 @@ public class MainEditorController {
 
 	}
 
+	/**
+	 * Returns the size of a tile
+	 * 
+	 * @return the size of a tile
+	 */
+
 	private double getTileSize() {
 		Grid grid = App.getGrid();
 		return canvasGrid.getHeight() / Math.max(grid.getNumColumns(), grid.getNumRows());
 	}
+
+	/**
+	 * draws the grid depending on the number of rows and columns and sets the
+	 * elevation of tiles checks if the tiles are selected and if they are, it draws
+	 * the tile differently to show that it is selected checks if the tiles are
+	 * pointy and if they are, it draws the tiles differently to show that it is
+	 * selected
+	 */
 
 	private void drawGrid() {
 		Grid grid = App.getGrid();
@@ -159,6 +173,57 @@ public class MainEditorController {
 		}
 	}
 
+	/**
+	 * adds multiple objects to the program like mountains, pitts, and more to draw
+	 * them with one button click
+	 * 
+	 * @param event
+	 */
+	@FXML
+	void addFeatureAction(ActionEvent event) {
+		int r;
+		int c;
+		int[][] feature;
+		if (clickedTileSet.size() == 0) {
+			new Alert(AlertType.ERROR, "Select atleast one tile").showAndWait();
+		} else {
+			for (Tile tile : clickedTileSet) {
+				r = tile.getRow();
+				c = tile.getColumn();
+				if (featuresComboBox.getValue().equals("Mountains")) {
+					feature = Features.getMountain();
+				} else if (featuresComboBox.getValue().equals("Pitt")) {
+					feature = Features.getPit();
+				}else if(featuresComboBox.getValue().equals("Road")) { 
+					feature = Features.getRoad();
+				}else if(featuresComboBox.getValue().equals("Augie A")) {
+					feature = Features.getAugieA();
+				}
+				
+				else {
+					feature = Features.getVolcano();
+				}
+				try {
+					for (int i = r; i < r + feature.length; i++) {
+						for (int j = c; j < c + feature[0].length; j++) {
+							App.getGrid().getTileAt(i, j).setElevation(feature[i - r][j - c]);
+						}
+					}
+					drawGrid();
+					undoRedoHandler.saveState(createMemento());
+				} catch (ArrayIndexOutOfBoundsException ex) {
+					new Alert(AlertType.ERROR, "Cannot draw the feature in this area").showAndWait();
+				} catch (NullPointerException ex) {
+					new Alert(AlertType.ERROR, "Select a feature from the drop down").showAndWait();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Allows you to select a region when two tiles (corners) are selected
+	 */
+
 	@FXML
 	void selectedARegion() {
 		Grid grid = App.getGrid();
@@ -181,6 +246,7 @@ public class MainEditorController {
 				}
 				if (tile.getColumn() < startCol) {
 					startCol = tile.getColumn();
+
 				}
 			}
 			for (int r = startRow; r <= endRow; r++) {
@@ -195,18 +261,35 @@ public class MainEditorController {
 
 	}
 
+	/**
+	 * When a tile is selected and button for pointy is selected, it sets the tile
+	 * to pointy.
+	 */
 	@FXML
 	void pointyTileSelected(ActionEvent event) {
 		if (clickedTileSet.isEmpty()) {
 			new Alert(AlertType.ERROR, "Select atleast one tile.").showAndWait();
+
 		} else {
+			for (Tile tile : clickedTileSet) {
+				if (!tile.getPointy()) {
+					continue;
+				} else {
+					new Alert(AlertType.ERROR, "The one selected is already pointy").showAndWait();
+				}
+			}
+
 			for (Tile tile : clickedTileSet) {
 				tile.setPointy(true);
 			}
 			drawGrid();
+			undoRedoHandler.saveState(createMemento());
 		}
-		undoRedoHandler.saveState(createMemento());
 	}
+
+	/**
+	 * clears the selected tiles
+	 */
 
 	@FXML
 	void clearSelected() {
@@ -215,11 +298,16 @@ public class MainEditorController {
 		} else {
 			for (Tile tile : clickedTileSet) {
 				tile.setElevation(0);
+				tile.setPointy(false);
 			}
 			drawGrid();
 			undoRedoHandler.saveState(createMemento());
 		}
 	}
+
+	/**
+	 * Sets the selected tiles to the specified elevation
+	 */
 
 	@FXML
 	void setPressed(ActionEvent event) {
@@ -236,8 +324,12 @@ public class MainEditorController {
 
 	}
 
+	/**
+	 * Selects all the tiles that have the same elevation as the selected tile
+	 */
+
 	@FXML
-	public void selectHeight() {
+	void selectHeight() {
 		Grid grid = App.getGrid();
 		HashSet<Double> selectHeights = new HashSet<>();
 		if (clickedTileSet.size() != 1) {
@@ -259,6 +351,9 @@ public class MainEditorController {
 
 	}
 
+	/**
+	 * unSelects currently selected tiles
+	 */
 	@FXML
 	void unSelectPressed() {
 		if (clickedTileSet.isEmpty()) {
@@ -270,6 +365,11 @@ public class MainEditorController {
 		}
 	}
 
+	/**
+	 * handles mouse clicks on the grid
+	 * 
+	 * @param evt- the event
+	 */
 	private void handleCanvasMousePress(MouseEvent evt) {
 		int c = (int) (evt.getX() / getTileSize());
 		int r = (int) (evt.getY() / getTileSize());
@@ -282,8 +382,16 @@ public class MainEditorController {
 		}
 	}
 
+	/**
+	 * handles mouse drags on the grid
+	 * 
+	 * @param evt -drag event
+	 */
+
 	private void handleCanvasMouseDrag(MouseEvent evt) {
-		try {
+		int x = (int) (evt.getX());
+		int y = (int) (evt.getY());
+		if (!(x < 0 || x > canvasGrid.getWidth() || y < 0 || y > canvasGrid.getHeight())) {
 			int c = (int) (evt.getX() / getTileSize());
 			int r = (int) (evt.getY() / getTileSize());
 			Tile dragTile = App.getGrid().getTileAt(r, c);
@@ -293,16 +401,25 @@ public class MainEditorController {
 			} else if (dragTile != currentTileModified && buttonClicked != selectButton && buttonClicked != null) {
 				adjustTileHeight(dragTile);
 			}
-		} catch (ArrayIndexOutOfBoundsException ex) {
-			new Alert(AlertType.ERROR, "Please only drag inside the grid").showAndWait();
 
 		}
 	}
+
+	/**
+	 * handles the release of the mouse from the grid
+	 * 
+	 * @param evt- the event
+	 */
 
 	private void handleCanvasMouseReleased(MouseEvent evt) {
 		undoRedoHandler.saveState(createMemento());
 	}
 
+	/**
+	 * adjusts the height of a tile
+	 * 
+	 * @param tile
+	 */
 	private void adjustTileHeight(Tile tile) {
 		double sliderValue = elevationSlider.getValue();
 		double newElevation = 0;
@@ -326,52 +443,22 @@ public class MainEditorController {
 		currentTileModified = tile;
 	}
 
+	/**
+	 * stores the selected tiles in the clickedTilesSet
+	 * 
+	 * @param tile
+	 */
+
 	private void selectButtonSelected(Tile tile) {
 		clickedTileSet.add(tile);
 		drawGrid();
 	}
 
-	@FXML
-	void addFeatureAction(ActionEvent event) {
-		int r;
-		int c;
-		int[][] feature;
-		if (clickedTileSet.size() == 0) {
-			new Alert(AlertType.ERROR, "Select atleast one tile").showAndWait();
-		} else {
-			for (Tile tile : clickedTileSet) {
-				r = tile.getRow();
-				c = tile.getColumn();
-				try {
-					if (featuresComboBox.getValue().equals("Mountains")) {
-						feature = Features.getMountain();
-					} else if (featuresComboBox.getValue().equals("Pitt")) {
-						feature = Features.getPit();
-					} else if(featuresComboBox.getValue().equals("Augie A")) {
-						feature = Features.getAugieA();
-					}else if(featuresComboBox.getValue().equals("Road")) {
-						feature = Features.getRoad();
-					}
-					else {
-						feature = Features.getVolcanos();
-					}
-					for (int i = r; i < r + feature.length; i++) {
-						for (int j = c; j < c + feature[0].length; j++) {
-							App.getGrid().getTileAt(i, j).setElevation(feature[i - r][j - c]);
-						}
-					}
-				} catch (ArrayIndexOutOfBoundsException ex) {
-					new Alert(AlertType.ERROR, "Cannot draw the feature in this area").showAndWait();
-				} catch (NullPointerException ex) {
-					new Alert(AlertType.ERROR, "Select a feature from the drop down").showAndWait();
-				}
-			}
-			drawGrid();
-			undoRedoHandler.saveState(createMemento());
-
-		}
-
-	}
+	/**
+	 * resets the map to an empty one
+	 * 
+	 * @param event
+	 */
 
 	@FXML
 	void clearMapPressed(ActionEvent event) {
@@ -386,6 +473,12 @@ public class MainEditorController {
 		drawGrid();
 		undoRedoHandler.saveState(createMemento());
 	}
+
+	/**
+	 * handles file opening
+	 * 
+	 * @param event
+	 */
 
 	@FXML
 	void openFileAction(ActionEvent event) {
@@ -407,6 +500,11 @@ public class MainEditorController {
 		}
 	}
 
+	/**
+	 * handles files saving
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void saveFileAsAction(ActionEvent event) {
 		FileChooser saveChooser = new FileChooser();
@@ -422,6 +520,10 @@ public class MainEditorController {
 			}
 		}
 	}
+
+	/**
+	 * exports the current file to a 3D .OBJ file
+	 */
 
 	@FXML
 	public void exportOBJAction() {
@@ -479,12 +581,23 @@ public class MainEditorController {
 
 	}
 
+	/**
+	 * handles redo button press
+	 * 
+	 * @param event
+	 */
+
 	@FXML
 	void redoAction(ActionEvent event) {
 		EditorState state = undoRedoHandler.redo();
 		state.restore();
 	}
 
+	/**
+	 * handles undo button press
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void undoAction(ActionEvent event) {
 		EditorState state = undoRedoHandler.undo();
@@ -492,6 +605,11 @@ public class MainEditorController {
 
 	}
 
+	/**
+	 * switches current display to the 3D Preview
+	 * 
+	 * @throws IOException
+	 */
 	@FXML
 	private void switchToThreeDPreview() throws IOException {
 		Stage stage = new Stage();
@@ -500,6 +618,11 @@ public class MainEditorController {
 
 	}
 
+	/**
+	 * switches current display to the about screen
+	 * 
+	 * @throws IOException
+	 */
 	@FXML
 	private void switchToAboutScreen() throws IOException {
 		// App.setRoot("AboutScreen");
@@ -516,17 +639,33 @@ public class MainEditorController {
 
 	}
 
+	/**
+	 * switches current display to the preloaded view screen
+	 * 
+	 * @throws IOException
+	 */
 	@FXML
 	private void switchToPreloadedScreen() throws IOException {
 		App.setRoot("preLoaded_Preview");
 
 	}
 
+	/**
+	 * switches current display to the empty grid view screen
+	 * 
+	 * @throws IOException
+	 */
 	@FXML
 	private void switchToEmptyGrid() throws IOException {
 		App.setRoot("emptyGridGenerator");
 
 	}
+
+	/**
+	 * resizes the current map
+	 * 
+	 * @throws IOException
+	 */
 
 	@FXML
 	private void switchToResizeChoice() throws IOException {
@@ -547,6 +686,9 @@ public class MainEditorController {
 		undoRedoHandler.saveState(createMemento());
 	}
 
+	/**
+	 * sets keyboard shortcuts for four buttons
+	 */
 	private void initShortcuts() {
 		// ALT+D to clear the map
 		clearMapBtn.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.D, KeyCombination.ALT_DOWN),
@@ -583,6 +725,11 @@ public class MainEditorController {
 
 	}
 
+	/**
+	 * creates a Memento
+	 * 
+	 * @return an EditorState object
+	 */
 	public EditorState createMemento() {
 		return new EditorState();
 	}
@@ -595,7 +742,7 @@ public class MainEditorController {
 			clonedGrid = App.getGrid().clone();
 			selectionSet = new HashSet<Tile>();
 			// loop through the current selected tile set
-			// and add the corresponding tile (at row,col) from the clonedgrid
+			// and add the corresponding tile (at7 row,col) from the clonedgrid
 			// into the new set;
 			for (Tile tile : clickedTileSet) {
 				selectionSet.add(clonedGrid.getTileAt(tile.getRow(), tile.getColumn()));
