@@ -8,16 +8,17 @@ import ibis.boardcreator.ui.MainEditorController.EditorState;
 public class UndoRedoHandler {
 
 	private Stack<MainEditorController.EditorState> undoStack, redoStack;
-	// invariant: The top state of the undoStack always is a copy of the
-	// current state of the grid.
 
-
+	/**
+	 * Constructor creates the undo stack and redo stack and pushes the start state
+	 * to the undo stack which is a copy of the current state of the grid.
+	 */
 	public UndoRedoHandler(MainEditorController.EditorState startState) {
 		undoStack = new Stack<MainEditorController.EditorState>();
 		redoStack = new Stack<MainEditorController.EditorState>();
 
 		// store the initial state of the canvas on the undo stack
-		
+
 		undoStack.push(startState);
 	}
 
@@ -30,24 +31,23 @@ public class UndoRedoHandler {
 	}
 
 	/**
-	 * Returns the previous state from the undo stack
-	 * if there's only the current state on the stack, 
-	 * it gets returned but not removed from the undo stack 
+	 * Returns the previous state from the undo stack if there's only the current
+	 * state on the stack, it gets returned but not removed from the undo stack
 	 */
 	public EditorState undo() {
 		if (undoStack.size() == 1) // only the current state is on the stack
 			return undoStack.peek();
-		
+
 		EditorState currentState = undoStack.pop();
 		redoStack.push(currentState);
-		
+
 		return undoStack.peek();
 	}
-	
+
 	/**
-	 * returns the state of the grid from before the last undo
-	 * action was performed. If some change was made to the Grid
-	 * since the last undo, then this method just returns the current state.
+	 * returns the state of the grid from before the last undo action was performed.
+	 * If some change was made to the Grid since the last undo, then this method
+	 * just returns the current state.
 	 */
 	public EditorState redo() {
 		if (redoStack.isEmpty())
@@ -56,7 +56,7 @@ public class UndoRedoHandler {
 		EditorState currentState = redoStack.pop();
 		undoStack.push(currentState);
 		return currentState;
-		
+
 	}
 
 }

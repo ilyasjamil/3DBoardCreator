@@ -189,7 +189,7 @@ public class MainEditorController {
 				} else if (featuresComboBox.getValue().equals("Pitt")) {
 					feature = Features.getPit();
 				} else {
-					feature = Features.getVolcanos();
+					feature = Features.getVolcano();
 				}
 				try {
 					for (int i = r; i < r + feature.length; i++) {
