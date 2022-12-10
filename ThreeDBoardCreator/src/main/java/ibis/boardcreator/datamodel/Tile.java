@@ -7,6 +7,7 @@ public class Tile implements Cloneable {
 	private double elevation;
 	private boolean pointy;
 	
+	
     public Tile(int row, int column,  double elevation) {
         this.row = row;    
         this.column = column;    

@@ -129,7 +129,9 @@ public class MainEditorController {
 	}
 
 	/**
-	 * draws the grid depending on the number of rows and columns
+	 * draws the grid depending on the number of rows and columns and sets the elevation of tiles
+	 * checks if the tiles are selected and if they are, it draws the tile differently to show that it is selected
+	 * checks if the tiles are pointy and if they are, it draws the tiles differently to show that it is selected
 	 */
 	private void drawGrid() {
 		Grid grid = App.getGrid();
@@ -165,7 +167,12 @@ public class MainEditorController {
 		}
 	}
 	
-	
+	/**
+	 * adds multiple objects to the program like mountains, pitts, and more to draw
+	 * them with one button click
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void addFeatureAction(ActionEvent event){
 		int r;
@@ -198,9 +205,7 @@ public class MainEditorController {
 					new Alert(AlertType.ERROR, "Select a feature from the drop down").showAndWait();
 				}
 			}
-
 		}
-
 	}
 	
 	/**
@@ -243,7 +248,7 @@ public class MainEditorController {
 	}
 
 	/**
-	 * make a tile pointy
+	 * When a tile is selected and button for pointy is selected, it sets the tile to pointy.
 	 */
 	@FXML
 	void pointyTileSelected(ActionEvent event) {
@@ -281,7 +286,10 @@ public class MainEditorController {
 			undoRedoHandler.saveState(createMemento());
 		}
 	}
-
+	
+	/**
+	 * Sets the selected tiles to the specified elevation
+	 */
 	@FXML
 	void setPressed(ActionEvent event) {
 		if (clickedTileSet.isEmpty()) {
@@ -297,8 +305,11 @@ public class MainEditorController {
 
 	}
 
+	/**
+	 * Selects all the tiles that have the same elevation as the selected tile
+	 */
 	@FXML
-	public void selectHeight() {
+	void selectHeight() {
 		Grid grid = App.getGrid();
 		HashSet<Double> selectHeights = new HashSet<>();
 		if (clickedTileSet.size() != 1) {
@@ -321,7 +332,7 @@ public class MainEditorController {
 	}
 
 	/**
-	 * unselect currently selected tiles
+	 * unSelects currently selected tiles
 	 */
 	@FXML
 	void unSelectPressed() {
@@ -419,12 +430,6 @@ public class MainEditorController {
 		drawGrid();
 	}
 
-	/**
-	 * adds multiple objects to the program like mountains, pitts, and more to draw
-	 * them with one button click
-	 * 
-	 * @param event
-	 */
 	
 
 	/**

@@ -3,12 +3,21 @@ package ibis.boardcreator.datamodel;
 
 public class Grid {
 	private Tile[][] board;
-//	private double TILE_SIDE_LENGTH = 10.0; // TODO: should this change to an instance variable?
-
+	
+	/**
+	 * constructor that creates the grid with 20 rows and 20 columns 
+	 * 
+	 */
 	public Grid() {
 		this(20,20);		
 	}
-
+	
+	/**
+	 * constructor that creates the grid with numRows rows and numColumns columns 
+	 * 
+	 * @param numRows The number of rows for the grid
+	 * @param numColumns The number of columns for the grid
+	 */
 	public Grid(int numRows, int numColumns) {
 		board = new Tile[numRows][numColumns];
 		for (int row = 0; row < numRows; row++) {
@@ -17,23 +26,51 @@ public class Grid {
 			}
 		}
 	}
+	
+	/**
+	 * returns the 2D board of row and columns of the tiles created in the grid
+	 * 
+	 * @return the 2D board
+	 */
 	public Tile[][] getBoard(){
 		return this.board;
 	}
 	
+	/**
+	 * returns the tile at specific the row and column of the grid
+	 * 
+	 *  @param row The specific row on the grid
+	 *  @param column The specific column on the grid
+	 * 
+	 * @return the tile at the row and column of the grid 
+	 */
 	public Tile getTileAt(int row, int column) {
 		return board[row][column];
 	}
 	
+	/**
+	 * returns the number of rows of the grid
+	 * 
+	 * @return the number of rows
+	 */
 	public int getNumRows() {
 		return board.length;
 	}
 
+	/**
+	 * returns the number of columns of the grid
+	 * 
+	 * @return the number of columns
+	 */
 	public int getNumColumns() {
 		return board[0].length;
 	}
 	
-
+	/**
+	 * returns the a copy of the grid created
+	 * 
+	 * @return a copy of the grid
+	 */
 	public Grid clone() {
 		Grid copy = new Grid(this.getNumRows(), this.getNumColumns());
 		
@@ -46,6 +83,14 @@ public class Grid {
 		return copy;
 	}
 	
+	/**
+	 * returns a resized grid with the number of rows and columns specified. Keeps the tiles modified the same
+	 * 
+	 * @param newRows The number of rows for the new grid
+	 * @param newColumns The number of columns for the new grid
+	 * 
+	 * @return the number of columns
+	 */
 	public void resize(int newRows, int newColumns) {
 		Tile[][] newBoard = new Tile[newRows][newColumns];
 		for(int i = 0; i < newRows; i++) {
@@ -62,6 +107,11 @@ public class Grid {
 		
 	}
 	
+	/**
+	 * returns a description for the grid 
+	 * 
+	 * @return A string that describes the grid
+	 */
 	@Override
 	public String toString() {
 		return "The grid has " + this.getNumRows() + " rows and " + this.getNumColumns() + " columns."; 
