@@ -177,29 +177,27 @@ public class MainEditorController {
 			for (Tile tile : clickedTileSet) {
 				r = tile.getRow();
 				c = tile.getColumn();
+				if (featuresComboBox.getValue().equals("Mountains")) {
+					feature = Features.getMountain();
+				} else if (featuresComboBox.getValue().equals("Pitt")) {
+					feature = Features.getPit();
+				} else {
+					feature = Features.getVolcanos();
+				}
 				try {
-					if (featuresComboBox.getValue().equals("Mountains")) {
-						feature = Features.getMountain();
-					} else if (featuresComboBox.getValue().equals("Pitt")) {
-						feature = Features.getPit();
-					} else {
-						feature = Features.getVolcanos();
-					}
-					
 					for (int i = r; i < r + feature.length; i++) {
 						for (int j = c; j < c + feature[0].length; j++) {
 							App.getGrid().getTileAt(i, j).setElevation(feature[i - r][j - c]);
 						}
 					}
-					
+					drawGrid();
+					undoRedoHandler.saveState(createMemento());
 				}catch(ArrayIndexOutOfBoundsException ex){
 					new Alert(AlertType.ERROR, "Cannot draw the feature in this area").showAndWait();
 				}catch(NullPointerException ex) {
 					new Alert(AlertType.ERROR, "Select a feature from the drop down").showAndWait();
 				}
 			}
-			drawGrid();
-			undoRedoHandler.saveState(createMemento());
 
 		}
 
