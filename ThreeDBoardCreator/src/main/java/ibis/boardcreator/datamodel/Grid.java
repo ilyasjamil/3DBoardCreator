@@ -1,21 +1,26 @@
 package ibis.boardcreator.datamodel;
 
-
+/**
+ * This class creates the grid on the canvas. It has methods to get the grid
+ * with the tiles in it. It has methods to get the tile at specific locations,
+ * get the number of rows and columns of the grid, and methods to resize and
+ * clone the grid.
+ */
 public class Grid {
 	private Tile[][] board;
-	
+
 	/**
-	 * constructor that creates the grid with 20 rows and 20 columns 
+	 * constructor that creates the grid with 20 rows and 20 columns
 	 * 
 	 */
 	public Grid() {
-		this(20,20);		
+		this(20, 20);
 	}
-	
+
 	/**
-	 * constructor that creates the grid with numRows rows and numColumns columns 
+	 * constructor that creates the grid with numRows rows and numColumns columns
 	 * 
-	 * @param numRows The number of rows for the grid
+	 * @param numRows    The number of rows for the grid
 	 * @param numColumns The number of columns for the grid
 	 */
 	public Grid(int numRows, int numColumns) {
@@ -26,28 +31,28 @@ public class Grid {
 			}
 		}
 	}
-	
+
 	/**
 	 * returns the 2D board of row and columns of the tiles created in the grid
 	 * 
 	 * @return the 2D board
 	 */
-	public Tile[][] getBoard(){
+	public Tile[][] getBoard() {
 		return this.board;
 	}
-	
+
 	/**
 	 * returns the tile at specific the row and column of the grid
 	 * 
-	 *  @param row The specific row on the grid
-	 *  @param column The specific column on the grid
+	 * @param row    The specific row on the grid
+	 * @param column The specific column on the grid
 	 * 
-	 * @return the tile at the row and column of the grid 
+	 * @return the tile at the row and column of the grid
 	 */
 	public Tile getTileAt(int row, int column) {
 		return board[row][column];
 	}
-	
+
 	/**
 	 * returns the number of rows of the grid
 	 * 
@@ -65,7 +70,7 @@ public class Grid {
 	public int getNumColumns() {
 		return board[0].length;
 	}
-	
+
 	/**
 	 * returns the a copy of the grid created
 	 * 
@@ -73,7 +78,7 @@ public class Grid {
 	 */
 	public Grid clone() {
 		Grid copy = new Grid(this.getNumRows(), this.getNumColumns());
-		
+
 		Tile[][] copyBoard = copy.getBoard();
 		for (int r = 0; r < copy.getNumRows(); r++) {
 			for (int c = 0; c < copy.getNumColumns(); c++) {
@@ -82,39 +87,39 @@ public class Grid {
 		}
 		return copy;
 	}
-	
+
 	/**
-	 * returns a resized grid with the number of rows and columns specified. Keeps the tiles modified the same
+	 * returns a resized grid with the number of rows and columns specified. Keeps
+	 * the tiles modified the same
 	 * 
-	 * @param newRows The number of rows for the new grid
+	 * @param newRows    The number of rows for the new grid
 	 * @param newColumns The number of columns for the new grid
 	 * 
 	 * @return the number of columns
 	 */
 	public void resize(int newRows, int newColumns) {
 		Tile[][] newBoard = new Tile[newRows][newColumns];
-		for(int i = 0; i < newRows; i++) {
-			for(int j = 0; j < newColumns; j++) {
-				if(i >= board.length || j >= board[0].length) {
+		for (int i = 0; i < newRows; i++) {
+			for (int j = 0; j < newColumns; j++) {
+				if (i >= board.length || j >= board[0].length) {
 					newBoard[i][j] = new Tile(i, j, 0);
-				}
-				else {
+				} else {
 					newBoard[i][j] = board[i][j];
 				}
-			}	
+			}
 		}
 		this.board = newBoard;
-		
+
 	}
-	
+
 	/**
-	 * returns a description for the grid 
+	 * returns a description for the grid
 	 * 
 	 * @return A string that describes the grid
 	 */
 	@Override
 	public String toString() {
-		return "The grid has " + this.getNumRows() + " rows and " + this.getNumColumns() + " columns."; 
+		return "The grid has " + this.getNumRows() + " rows and " + this.getNumColumns() + " columns.";
 	}
 
 }
