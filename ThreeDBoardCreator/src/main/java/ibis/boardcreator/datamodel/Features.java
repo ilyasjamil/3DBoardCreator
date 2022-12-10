@@ -1,4 +1,4 @@
-package ibis.boardcreator.ui;
+package ibis.boardcreator.datamodel;
 
 public class Features {
 	private static final int[][] MOUNTAIN = { { 2, 2, 2 }, { 2, 6, 2 }, { 2, 2, 2 } };

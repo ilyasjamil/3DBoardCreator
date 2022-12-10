@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+
+import ibis.boardcreator.datamodel.Features;
 import ibis.boardcreator.datamodel.Grid;
 import ibis.boardcreator.datamodel.GridIO;
 import ibis.boardcreator.datamodel.Tile;
@@ -93,6 +95,8 @@ public class MainEditorController {
 
 	@FXML
 	private TextField numRows;
+
+	FilesIO file = new FilesIO();
 
 	/**
 	 * Initialize the controller
@@ -194,12 +198,12 @@ public class MainEditorController {
 					feature = Features.getMountain();
 				} else if (featuresComboBox.getValue().equals("Pitt")) {
 					feature = Features.getPit();
-				}else if(featuresComboBox.getValue().equals("Road")) { 
+				} else if (featuresComboBox.getValue().equals("Road")) {
 					feature = Features.getRoad();
-				}else if(featuresComboBox.getValue().equals("Augie A")) {
+				} else if (featuresComboBox.getValue().equals("Augie A")) {
 					feature = Features.getAugieA();
 				}
-				
+
 				else {
 					feature = Features.getVolcano();
 				}
@@ -209,15 +213,17 @@ public class MainEditorController {
 							App.getGrid().getTileAt(i, j).setElevation(feature[i - r][j - c]);
 						}
 					}
-					drawGrid();
-					undoRedoHandler.saveState(createMemento());
+
 				} catch (ArrayIndexOutOfBoundsException ex) {
 					new Alert(AlertType.ERROR, "Cannot draw the feature in this area").showAndWait();
 				} catch (NullPointerException ex) {
 					new Alert(AlertType.ERROR, "Select a feature from the drop down").showAndWait();
 				}
 			}
+
 		}
+		drawGrid();
+		undoRedoHandler.saveState(createMemento());
 	}
 
 	/**
@@ -482,21 +488,16 @@ public class MainEditorController {
 
 	@FXML
 	void openFileAction(ActionEvent event) {
-		FileChooser openChooser = new FileChooser();
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Grids (*.MAP)", "*.MAP");
-		openChooser.getExtensionFilters().add(extFilter);
-		File inputFile = openChooser.showOpenDialog(App.getMainWindow());
-		if (inputFile != null) {
-			try {
-				Grid grid = GridIO.load2dMapFromJSONFile(inputFile);
-				App.setGrid(grid);
-				drawGrid();
-			} catch (FileNotFoundException ex) {
-				new Alert(AlertType.ERROR, "The file you tried to open could not be found.").showAndWait();
-			} catch (IOException ex) {
-				new Alert(AlertType.ERROR,
-						"Error opening file.  Did you choose a valid .movieList file (which uses JSON format?)").show();
-			}
+
+		try {
+			Grid grid = file.openFile(event);
+			App.setGrid(grid);
+			drawGrid();
+		} catch (FileNotFoundException ex) {
+			new Alert(AlertType.ERROR, "The file you tried to open could not be found.").showAndWait();
+		} catch (IOException ex) {
+			new Alert(AlertType.ERROR,
+					"Error opening file.  Did you choose a valid .movieList file (which uses JSON format?)").show();
 		}
 	}
 
@@ -507,18 +508,7 @@ public class MainEditorController {
 	 */
 	@FXML
 	void saveFileAsAction(ActionEvent event) {
-		FileChooser saveChooser = new FileChooser();
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Grids (*.MAP)", "*.MAP");
-		saveChooser.getExtensionFilters().add(extFilter);
-		File outputFile = saveChooser.showSaveDialog(App.getMainWindow());
-		if (outputFile != null) {
-			Grid grid = App.getGrid();
-			try {
-				GridIO.save2dMapAsJSONFile(grid, outputFile);
-			} catch (IOException ex) {
-				new Alert(AlertType.ERROR, "An I/O error occurred while trying to save this file.").showAndWait();
-			}
-		}
+		file.saveFileAs(event);
 	}
 
 	/**
@@ -527,58 +517,7 @@ public class MainEditorController {
 
 	@FXML
 	public void exportOBJAction() {
-		FileChooser saveChooser = new FileChooser();
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("OBJ File(*.OBJ)", "*.OBJ");
-		saveChooser.getExtensionFilters().add(extFilter);
-		File outputFile = saveChooser.showSaveDialog(App.getMainWindow());
-		if (outputFile != null) {
-			Grid grid = App.getGrid();
-			Tile[][] board = grid.getBoard();
-			try {
-				FileWriter writer = new FileWriter(outputFile);
-				writer.write("o " + 1 + System.lineSeparator());
-				for (int i = 0; i < board.length; i++) {
-					for (int j = 0; j < board[0].length; j++) {
-						Tile tile = board[i][j];
-						int r = tile.getRow();
-						int c = tile.getColumn();
-						double e = tile.getElevation();
-						writer.write("v " + c + " " + r + " " + e + System.lineSeparator());
-						writer.write("v " + c + " " + r + " " + 0 + System.lineSeparator());
-						writer.write("v " + c + " " + String.valueOf(r + 1) + " " + 0 + System.lineSeparator());
-						writer.write("v " + c + " " + String.valueOf(r + 1) + " " + e + System.lineSeparator());
-						writer.write("v " + String.valueOf(c + 1) + " " + r + " " + e + System.lineSeparator());
-						writer.write("v " + String.valueOf(c + 1) + " " + r + " " + 0 + System.lineSeparator());
-						writer.write("v " + String.valueOf(c + 1) + " " + String.valueOf(r + 1) + " " + 0
-								+ System.lineSeparator());
-						writer.write("v " + String.valueOf(c + 1) + " " + String.valueOf(r + 1) + " " + e
-								+ System.lineSeparator());
-					}
-				}
-				writer.write("usemtl Default" + System.lineSeparator());
-
-				for (int i = 0; i < board.length * board[0].length; i++) {
-					writer.write("f " + String.valueOf(8 * i + 4) + " " + String.valueOf(8 * i + 3) + " "
-							+ String.valueOf(8 * i + 2) + " " + String.valueOf(8 * i + 1) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 2) + " " + String.valueOf(8 * i + 6) + " "
-							+ String.valueOf(8 * i + 5) + " " + String.valueOf(8 * i + 1) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 3) + " " + String.valueOf(8 * i + 7) + " "
-							+ String.valueOf(8 * i + 6) + " " + String.valueOf(8 * i + 2) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 8) + " " + String.valueOf(8 * i + 7) + " "
-							+ String.valueOf(8 * i + 3) + " " + String.valueOf(8 * i + 4) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 5) + " " + String.valueOf(8 * i + 8) + " "
-							+ String.valueOf(8 * i + 4) + " " + String.valueOf(8 * i + 1) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 6) + " " + String.valueOf(8 * i + 7) + " "
-							+ String.valueOf(8 * i + 8) + " " + String.valueOf(8 * i + 5) + System.lineSeparator());
-				}
-				writer.close();
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		}
-
+		file.exportOBJ();
 	}
 
 	/**
