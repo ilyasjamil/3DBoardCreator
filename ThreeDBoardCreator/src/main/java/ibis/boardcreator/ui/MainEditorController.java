@@ -52,9 +52,9 @@ public class MainEditorController {
 	@FXML
 	private Button setBtn;
 
-    @FXML
-    private Button clearTilesBtn;
-	
+	@FXML
+	private Button clearTilesBtn;
+
 	@FXML
 	private ToggleButton clearMapBtn;
 
@@ -63,38 +63,37 @@ public class MainEditorController {
 
 	@FXML
 	private ToggleButton raiseElevationButton;
-	
+
 	@FXML
 	private ToggleButton resizeButton;
-	
-    @FXML
-    private Button pointyTileButton;
-    
+
+	@FXML
+	private Button pointyTileButton;
+
 	@FXML
 	private ToggleGroup toolButtonsGroup;
-	
+
 	@FXML
 	private Button undoBtn;
-	
+
 	@FXML
 	private Button redoBtn;
-	
+
 	@FXML
 	private Menu aboutScreen;
 
 	private HashSet<Tile> clickedTileSet;
 
 	private UndoRedoHandler undoRedoHandler;
-	
+
 	@FXML
 	private TextField numColumns;
-	
+
 	@FXML
 	private ComboBox<String> featuresComboBox;
 
 	@FXML
 	private TextField numRows;
-	
 
 	@FXML
 	private void initialize() {
@@ -108,26 +107,26 @@ public class MainEditorController {
 		featuresComboBox.getItems().add("Mountains");
 		featuresComboBox.getItems().add("Pitt");
 		featuresComboBox.getItems().add("Volcanos");
+		featuresComboBox.getItems().add("Augie A");
+		featuresComboBox.getItems().add("Road");
 		clearMapBtn.setStyle("-fx-background-color: #32a5cb");
 		resizeButton.setStyle("-fx-background-color: #7ababb");
 		drawGrid();
 		Platform.runLater(new Runnable() {
-		    public void run() {
-		        initShortcuts();
-		    }
+			public void run() {
+				initShortcuts();
+			}
 		});
 
 	}
-	
-	
+
 	private double getTileSize() {
 		Grid grid = App.getGrid();
 		return canvasGrid.getHeight() / Math.max(grid.getNumColumns(), grid.getNumRows());
 	}
 
-	
 	private void drawGrid() {
-		Grid grid = App.getGrid();	
+		Grid grid = App.getGrid();
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
 		gc.clearRect(0, 0, canvasGrid.getHeight(), canvasGrid.getWidth());
 		for (int r = 0; r < grid.getNumRows(); r++) {
@@ -142,68 +141,65 @@ public class MainEditorController {
 				Color color = new Color(grayVal, grayVal, grayVal, 1);
 				gc.setFill(color);
 				gc.fillRect(x, y, getTileSize(), getTileSize());
-				if(tile.getPointy()) {
+				if (tile.getPointy()) {
 					gc.setStroke(color.BLUE);
-					gc.strokeLine(x, y, x+getTileSize(), y+getTileSize());
-					gc.strokeLine(x, y+ getTileSize(), x+getTileSize(), y);
-					
+					gc.strokeLine(x, y, x + getTileSize(), y + getTileSize());
+					gc.strokeLine(x, y + getTileSize(), x + getTileSize(), y);
+
 				}
 			}
 
 		}
-		
+
 		for (Tile tile : clickedTileSet) {
-			double x = tile.getColumn()*getTileSize();
-			double y = tile.getRow()* getTileSize();
+			double x = tile.getColumn() * getTileSize();
+			double y = tile.getRow() * getTileSize();
 			gc.setStroke(Color.RED);
 			gc.strokeRect(x, y, getTileSize(), getTileSize());
 		}
 	}
-	
-	
-	
+
 	@FXML
 	void selectedARegion() {
 		Grid grid = App.getGrid();
 		if (clickedTileSet.size() != 2) {
 			new Alert(AlertType.ERROR, "Select two tiles to create a region.").showAndWait();
-		}else {
-				int startRow = 1000;
-				int endRow = -1;
-				int startCol = 1000;
-				int endCol = -1;
-				for (Tile tile : clickedTileSet) {
-					if (tile.getRow() > endRow) {
-						endRow = tile.getRow();
-					}
-					if (tile.getRow() < startRow) {
-						startRow = tile.getRow();
-					}
-					if (tile.getColumn() > endCol) {
-						endCol = tile.getColumn();
-					}
-					if (tile.getColumn() < startCol) {
-						startCol = tile.getColumn();
-					}
+		} else {
+			int startRow = 1000;
+			int endRow = -1;
+			int startCol = 1000;
+			int endCol = -1;
+			for (Tile tile : clickedTileSet) {
+				if (tile.getRow() > endRow) {
+					endRow = tile.getRow();
 				}
-				for (int r = startRow; r <= endRow; r++) {
-					for (int c = startCol; c <= endCol; c++) {
-						clickedTileSet.add(grid.getTileAt(r, c));
-						
-					}
+				if (tile.getRow() < startRow) {
+					startRow = tile.getRow();
+				}
+				if (tile.getColumn() > endCol) {
+					endCol = tile.getColumn();
+				}
+				if (tile.getColumn() < startCol) {
+					startCol = tile.getColumn();
 				}
 			}
-			drawGrid();
-			undoRedoHandler.saveState(createMemento());
-			
-		}
+			for (int r = startRow; r <= endRow; r++) {
+				for (int c = startCol; c <= endCol; c++) {
+					clickedTileSet.add(grid.getTileAt(r, c));
 
+				}
+			}
+		}
+		drawGrid();
+		undoRedoHandler.saveState(createMemento());
+
+	}
 
 	@FXML
 	void pointyTileSelected(ActionEvent event) {
-		if(clickedTileSet.isEmpty()) {
+		if (clickedTileSet.isEmpty()) {
 			new Alert(AlertType.ERROR, "Select atleast one tile.").showAndWait();
-		}else {
+		} else {
 			for (Tile tile : clickedTileSet) {
 				tile.setPointy(true);
 			}
@@ -211,13 +207,12 @@ public class MainEditorController {
 		}
 		undoRedoHandler.saveState(createMemento());
 	}
-	
-	
+
 	@FXML
 	void clearSelected() {
 		if (clickedTileSet.isEmpty()) {
 			new Alert(AlertType.ERROR, "Select atleast one tile.").showAndWait();
-		}else {
+		} else {
 			for (Tile tile : clickedTileSet) {
 				tile.setElevation(0);
 			}
@@ -226,13 +221,11 @@ public class MainEditorController {
 		}
 	}
 
-	
-
 	@FXML
 	void setPressed(ActionEvent event) {
 		if (clickedTileSet.isEmpty()) {
 			new Alert(AlertType.ERROR, "Select atleast one tile.").showAndWait();
-		}else {
+		} else {
 			for (Tile tile : clickedTileSet) {
 				double newElevation = elevationSlider.getValue();
 				tile.setElevation(newElevation);
@@ -243,14 +236,13 @@ public class MainEditorController {
 
 	}
 
-	
 	@FXML
 	public void selectHeight() {
 		Grid grid = App.getGrid();
 		HashSet<Double> selectHeights = new HashSet<>();
 		if (clickedTileSet.size() != 1) {
 			new Alert(AlertType.ERROR, "Select one tile to see all tiles with same height.").showAndWait();
-		}else {
+		} else {
 			for (Tile tile : clickedTileSet) {
 				selectHeights.add(tile.getElevation());
 			}
@@ -264,15 +256,14 @@ public class MainEditorController {
 			}
 			undoRedoHandler.saveState(createMemento());
 		}
-		
+
 	}
-	
 
 	@FXML
 	void unSelectPressed() {
 		if (clickedTileSet.isEmpty()) {
 			new Alert(AlertType.ERROR, "There are no selected tiles.").showAndWait();
-		}else {
+		} else {
 			clickedTileSet.clear();
 			drawGrid();
 			undoRedoHandler.saveState(createMemento());
@@ -286,11 +277,11 @@ public class MainEditorController {
 		ToggleButton buttonClicked = (ToggleButton) toolButtonsGroup.getSelectedToggle();
 		if (buttonClicked == selectButton) {
 			selectButtonSelected(clickedTile);
-		}else if (buttonClicked != null) {			
+		} else if (buttonClicked != null) {
 			adjustTileHeight(clickedTile);
 		}
 	}
-		
+
 	private void handleCanvasMouseDrag(MouseEvent evt) {
 		try {
 			int c = (int) (evt.getX() / getTileSize());
@@ -299,20 +290,18 @@ public class MainEditorController {
 			ToggleButton buttonClicked = (ToggleButton) toolButtonsGroup.getSelectedToggle();
 			if (buttonClicked == selectButton) {
 				selectButtonSelected(dragTile);
-			}
-			else if (dragTile != currentTileModified && buttonClicked != selectButton
-					&& buttonClicked != null) {
+			} else if (dragTile != currentTileModified && buttonClicked != selectButton && buttonClicked != null) {
 				adjustTileHeight(dragTile);
 			}
-		}catch(ArrayIndexOutOfBoundsException ex) {
+		} catch (ArrayIndexOutOfBoundsException ex) {
 			new Alert(AlertType.ERROR, "Please only drag inside the grid").showAndWait();
 
 		}
 	}
-	
+
 	private void handleCanvasMouseReleased(MouseEvent evt) {
 		undoRedoHandler.saveState(createMemento());
-	}	
+	}
 
 	private void adjustTileHeight(Tile tile) {
 		double sliderValue = elevationSlider.getValue();
@@ -321,7 +310,7 @@ public class MainEditorController {
 		if (buttonClicked == raiseElevationButton) {
 			if (sliderValue == 0) {
 				new Alert(AlertType.ERROR, "Select an elevation to raise the tiles by").showAndWait();
-			}else {
+			} else {
 				newElevation = tile.getElevation() + sliderValue;
 			}
 		} else if (buttonClicked == lowerElevationButton) {
@@ -337,20 +326,19 @@ public class MainEditorController {
 		currentTileModified = tile;
 	}
 
-
 	private void selectButtonSelected(Tile tile) {
 		clickedTileSet.add(tile);
 		drawGrid();
 	}
-	
+
 	@FXML
-	void addFeatureAction(ActionEvent event){
+	void addFeatureAction(ActionEvent event) {
 		int r;
 		int c;
 		int[][] feature;
 		if (clickedTileSet.size() == 0) {
 			new Alert(AlertType.ERROR, "Select atleast one tile").showAndWait();
-		}else {
+		} else {
 			for (Tile tile : clickedTileSet) {
 				r = tile.getRow();
 				c = tile.getColumn();
@@ -359,7 +347,12 @@ public class MainEditorController {
 						feature = Features.getMountain();
 					} else if (featuresComboBox.getValue().equals("Pitt")) {
 						feature = Features.getPit();
-					} else {
+					} else if(featuresComboBox.getValue().equals("Augie A")) {
+						feature = Features.getAugieA();
+					}else if(featuresComboBox.getValue().equals("Road")) {
+						feature = Features.getRoad();
+					}
+					else {
 						feature = Features.getVolcanos();
 					}
 					for (int i = r; i < r + feature.length; i++) {
@@ -367,9 +360,9 @@ public class MainEditorController {
 							App.getGrid().getTileAt(i, j).setElevation(feature[i - r][j - c]);
 						}
 					}
-				}catch(ArrayIndexOutOfBoundsException ex){
+				} catch (ArrayIndexOutOfBoundsException ex) {
 					new Alert(AlertType.ERROR, "Cannot draw the feature in this area").showAndWait();
-				}catch(NullPointerException ex) {
+				} catch (NullPointerException ex) {
 					new Alert(AlertType.ERROR, "Select a feature from the drop down").showAndWait();
 				}
 			}
@@ -379,7 +372,7 @@ public class MainEditorController {
 		}
 
 	}
-	
+
 	@FXML
 	void clearMapPressed(ActionEvent event) {
 		clickedTileSet.clear();
@@ -393,7 +386,6 @@ public class MainEditorController {
 		drawGrid();
 		undoRedoHandler.saveState(createMemento());
 	}
-
 
 	@FXML
 	void openFileAction(ActionEvent event) {
@@ -430,7 +422,7 @@ public class MainEditorController {
 			}
 		}
 	}
-	
+
 	@FXML
 	public void exportOBJAction() {
 		FileChooser saveChooser = new FileChooser();
@@ -440,49 +432,52 @@ public class MainEditorController {
 		if (outputFile != null) {
 			Grid grid = App.getGrid();
 			Tile[][] board = grid.getBoard();
-		    try {
+			try {
 				FileWriter writer = new FileWriter(outputFile);
-				writer.write("o "+1+System.lineSeparator());
-				for (int i = 0; i < board.length;i++) {
-					for (int j = 0; j < board[0].length;j++) {
+				writer.write("o " + 1 + System.lineSeparator());
+				for (int i = 0; i < board.length; i++) {
+					for (int j = 0; j < board[0].length; j++) {
 						Tile tile = board[i][j];
 						int r = tile.getRow();
 						int c = tile.getColumn();
 						double e = tile.getElevation();
-						writer.write("v "+c+" "+r+" "+e+System.lineSeparator());
-						writer.write("v "+c+" "+r+" "+0+System.lineSeparator());
-						writer.write("v "+c+" "+String.valueOf(r+1)+" "+0+System.lineSeparator());
-						writer.write("v "+c+" "+String.valueOf(r+1)+" "+e+System.lineSeparator());
-						writer.write("v "+String.valueOf(c+1)+" "+r+" "+e+System.lineSeparator());
-						writer.write("v "+String.valueOf(c+1)+" "+r+" "+0+System.lineSeparator());
-						writer.write("v "+String.valueOf(c+1)+" "+String.valueOf(r+1)+" "+0+System.lineSeparator());
-						writer.write("v "+String.valueOf(c+1)+" "+String.valueOf(r+1)+" "+e+System.lineSeparator());
+						writer.write("v " + c + " " + r + " " + e + System.lineSeparator());
+						writer.write("v " + c + " " + r + " " + 0 + System.lineSeparator());
+						writer.write("v " + c + " " + String.valueOf(r + 1) + " " + 0 + System.lineSeparator());
+						writer.write("v " + c + " " + String.valueOf(r + 1) + " " + e + System.lineSeparator());
+						writer.write("v " + String.valueOf(c + 1) + " " + r + " " + e + System.lineSeparator());
+						writer.write("v " + String.valueOf(c + 1) + " " + r + " " + 0 + System.lineSeparator());
+						writer.write("v " + String.valueOf(c + 1) + " " + String.valueOf(r + 1) + " " + 0
+								+ System.lineSeparator());
+						writer.write("v " + String.valueOf(c + 1) + " " + String.valueOf(r + 1) + " " + e
+								+ System.lineSeparator());
 					}
 				}
-				writer.write("usemtl Default"+System.lineSeparator());
-				
-				for (int i = 0; i < board.length*board[0].length;i++) {
-						writer.write("f "+ String.valueOf(8*i+4)+ " "+ String.valueOf(8*i+3) +" "+ String.valueOf(8*i+2) +" "+ String.valueOf(8*i+1) +System.lineSeparator());
-						writer.write("f "+ String.valueOf(8*i+2)+ " "+ String.valueOf(8*i+6) +" "+ String.valueOf(8*i+5) +" "+ String.valueOf(8*i+1) +System.lineSeparator());
-						writer.write("f "+ String.valueOf(8*i+3)+ " "+ String.valueOf(8*i+7) +" "+ String.valueOf(8*i+6) +" "+ String.valueOf(8*i+2) +System.lineSeparator());
-						writer.write("f "+ String.valueOf(8*i+8)+ " "+ String.valueOf(8*i+7) +" "+ String.valueOf(8*i+3) +" "+ String.valueOf(8*i+4) +System.lineSeparator());
-						writer.write("f "+ String.valueOf(8*i+5)+ " "+ String.valueOf(8*i+8) +" "+ String.valueOf(8*i+4) +" "+ String.valueOf(8*i+1) +System.lineSeparator());
-						writer.write("f "+ String.valueOf(8*i+6)+ " "+ String.valueOf(8*i+7) +" "+ String.valueOf(8*i+8) +" "+ String.valueOf(8*i+5) +System.lineSeparator());
+				writer.write("usemtl Default" + System.lineSeparator());
+
+				for (int i = 0; i < board.length * board[0].length; i++) {
+					writer.write("f " + String.valueOf(8 * i + 4) + " " + String.valueOf(8 * i + 3) + " "
+							+ String.valueOf(8 * i + 2) + " " + String.valueOf(8 * i + 1) + System.lineSeparator());
+					writer.write("f " + String.valueOf(8 * i + 2) + " " + String.valueOf(8 * i + 6) + " "
+							+ String.valueOf(8 * i + 5) + " " + String.valueOf(8 * i + 1) + System.lineSeparator());
+					writer.write("f " + String.valueOf(8 * i + 3) + " " + String.valueOf(8 * i + 7) + " "
+							+ String.valueOf(8 * i + 6) + " " + String.valueOf(8 * i + 2) + System.lineSeparator());
+					writer.write("f " + String.valueOf(8 * i + 8) + " " + String.valueOf(8 * i + 7) + " "
+							+ String.valueOf(8 * i + 3) + " " + String.valueOf(8 * i + 4) + System.lineSeparator());
+					writer.write("f " + String.valueOf(8 * i + 5) + " " + String.valueOf(8 * i + 8) + " "
+							+ String.valueOf(8 * i + 4) + " " + String.valueOf(8 * i + 1) + System.lineSeparator());
+					writer.write("f " + String.valueOf(8 * i + 6) + " " + String.valueOf(8 * i + 7) + " "
+							+ String.valueOf(8 * i + 8) + " " + String.valueOf(8 * i + 5) + System.lineSeparator());
 				}
 				writer.close();
-				
-				
-				
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
 		}
 
-
 	}
-
-    
 
 	@FXML
 	void redoAction(ActionEvent event) {
@@ -496,7 +491,6 @@ public class MainEditorController {
 		state.restore();
 
 	}
-	
 
 	@FXML
 	private void switchToThreeDPreview() throws IOException {
@@ -508,18 +502,18 @@ public class MainEditorController {
 
 	@FXML
 	private void switchToAboutScreen() throws IOException {
-		//App.setRoot("AboutScreen");
+		// App.setRoot("AboutScreen");
 		Stage aboutScreenDialog = new Stage();
 		aboutScreenDialog.setResizable(false);
 		FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("AboutScreen.fxml"));
-        Parent root = fxmlLoader.load();
-        Scene aboutScreenScene = new Scene(root, 600, 400);
-        aboutScreenDialog.setScene(aboutScreenScene);
-        aboutScreenDialog.initOwner(App.getMainWindow());
-        aboutScreenDialog.initModality(Modality.APPLICATION_MODAL); 
-        aboutScreenDialog.showAndWait();
+		Parent root = fxmlLoader.load();
+		Scene aboutScreenScene = new Scene(root, 600, 400);
+		aboutScreenDialog.setScene(aboutScreenScene);
+		aboutScreenDialog.initOwner(App.getMainWindow());
+		aboutScreenDialog.initModality(Modality.APPLICATION_MODAL);
+		aboutScreenDialog.showAndWait();
 		drawGrid();
-        
+
 	}
 
 	@FXML
@@ -533,71 +527,65 @@ public class MainEditorController {
 		App.setRoot("emptyGridGenerator");
 
 	}
-	
+
 	@FXML
 	private void switchToResizeChoice() throws IOException {
 		clickedTileSet.clear();
-		//App.setRoot("ResizeChoiceController");
+		// App.setRoot("ResizeChoiceController");
 		Stage resizeDialog = new Stage();
 
 		// populate dialog with controls.
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("ResizeChoiceController.fxml"));
-        Parent root = fxmlLoader.load();
-        Scene resizeScene = new Scene(root, 840, 680);
-        resizeDialog.setScene(resizeScene);
+		FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("ResizeChoiceController.fxml"));
+		Parent root = fxmlLoader.load();
+		Scene resizeScene = new Scene(root, 840, 680);
+		resizeDialog.setScene(resizeScene);
 
 		resizeDialog.initOwner(App.getMainWindow());
-		resizeDialog.initModality(Modality.APPLICATION_MODAL); 
+		resizeDialog.initModality(Modality.APPLICATION_MODAL);
 		resizeDialog.showAndWait();
 		drawGrid();
 		undoRedoHandler.saveState(createMemento());
 	}
+
 	private void initShortcuts() {
-		//ALT+D to clear the map
-		clearMapBtn.getScene().getAccelerators().put(
-				  new KeyCodeCombination(KeyCode.D, KeyCombination.ALT_DOWN), 
-				  new Runnable() {
-				    @Override public void run() {
-				      clearMapBtn.fire();
-				    }
-				  }
-				);
-		//ALT+X to delete a selection
-		clearTilesBtn.getScene().getAccelerators().put(
-				  new KeyCodeCombination(KeyCode.X, KeyCombination.ALT_DOWN), 
-				  new Runnable() {
-				    @Override public void run() {
-				      clearTilesBtn.fire();
-				    }
-				  }
-				);
-		//CTRL+Z to undo
-		undoBtn.getScene().getAccelerators().put(
-				  new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN), 
-				  new Runnable() {
-				    @Override public void run() {
-				      undoBtn.fire();
-				    }
-				  }
-				);
-		//CTRL+R to redo
-		redoBtn.getScene().getAccelerators().put(
-				  new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN), 
-				  new Runnable() {
-				    @Override public void run() {
-				      redoBtn.fire();
-				    }
-				  }
-				);
-		
-		
+		// ALT+D to clear the map
+		clearMapBtn.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.D, KeyCombination.ALT_DOWN),
+				new Runnable() {
+					@Override
+					public void run() {
+						clearMapBtn.fire();
+					}
+				});
+		// ALT+X to delete a selection
+		clearTilesBtn.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.X, KeyCombination.ALT_DOWN),
+				new Runnable() {
+					@Override
+					public void run() {
+						clearTilesBtn.fire();
+					}
+				});
+		// CTRL+Z to undo
+		undoBtn.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN),
+				new Runnable() {
+					@Override
+					public void run() {
+						undoBtn.fire();
+					}
+				});
+		// CTRL+R to redo
+		redoBtn.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN),
+				new Runnable() {
+					@Override
+					public void run() {
+						redoBtn.fire();
+					}
+				});
+
 	}
-	
 
 	public EditorState createMemento() {
 		return new EditorState();
 	}
-	
 
 	public class EditorState {
 		private Grid clonedGrid;
@@ -612,14 +600,14 @@ public class MainEditorController {
 			for (Tile tile : clickedTileSet) {
 				selectionSet.add(clonedGrid.getTileAt(tile.getRow(), tile.getColumn()));
 			}
-			
+
 		}
 
 		public void restore() {
 			Grid clonedAgainGrid = clonedGrid.clone();
 			App.setGrid(clonedAgainGrid);
 			clickedTileSet = new HashSet<Tile>();
-	
+
 			for (Tile tile : selectionSet) {
 				clickedTileSet.add(clonedAgainGrid.getTileAt(tile.getRow(), tile.getColumn()));
 			}
@@ -627,6 +615,5 @@ public class MainEditorController {
 			drawGrid();
 		}
 	}
-	
 
 }
