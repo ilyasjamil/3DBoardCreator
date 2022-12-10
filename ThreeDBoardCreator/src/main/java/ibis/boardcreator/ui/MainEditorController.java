@@ -108,11 +108,13 @@ public class MainEditorController {
 		canvasGrid.setOnMouseReleased(evt -> handleCanvasMouseReleased(evt));
 		clickedTileSet = new HashSet<>();
 		undoRedoHandler = new UndoRedoHandler(createMemento());
+
 		featuresComboBox.getItems().add("Mountains");
 		featuresComboBox.getItems().add("Pitt");
 		featuresComboBox.getItems().add("Volcanos");
 		featuresComboBox.getItems().add("Augie A");
 		featuresComboBox.getItems().add("Road");
+
 		clearMapBtn.setStyle("-fx-background-color: #32a5cb");
 		resizeButton.setStyle("-fx-background-color: #7ababb");
 		drawGrid();

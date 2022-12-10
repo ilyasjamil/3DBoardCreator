@@ -1,5 +1,9 @@
 package ibis.boardcreator.datamodel;
-
+/**
+ * This class contains elevation data for the features which could be quickly added in the grid
+ * @author rijan
+ *
+ */
 public class Features {
 	private static final int[][] MOUNTAIN = { { 2, 2, 2 }, { 2, 6, 2 }, { 2, 2, 2 } };
 
@@ -9,23 +13,23 @@ public class Features {
 
 			{ 4, 6, 6, 6, 4 }, { 4, 4, 4, 4, 4 } };
 
-	private static final int[][] AugieA = { { 0, 2, 2, 0 }, { 2, 0, 0, 2 }, { 2, 0, 0, 2 }, { 2, 2, 2, 2 },
+	private static final int[][] AUGIEA = { { 0, 2, 2, 0 }, { 2, 0, 0, 2 }, { 2, 0, 0, 2 }, { 2, 2, 2, 2 },
 			{ 2, 0, 0, 2 }, { 2, 0, 0, 2 } };
 
-	private static final int[][] Road = { { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
+	private static final int[][] ROAD = { { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
 
 	/**
 	 * @return the road
 	 */
 	public static int[][] getRoad() {
-		return Road;
+		return ROAD;
 	}
 
 	/**
-	 * @return the augiea
+	 * @return the augie a
 	 */
 	public static int[][] getAugieA() {
-		return AugieA;
+		return AUGIEA;
 	}
 
 	/**
