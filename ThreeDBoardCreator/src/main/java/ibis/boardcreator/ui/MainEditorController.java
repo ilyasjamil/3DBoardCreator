@@ -98,6 +98,8 @@ public class MainEditorController {
 
 	@FXML
 	private void initialize() {
+		Grid grid = App.getGrid();
+		System.out.print(grid.toString());
 		canvasGrid.setOnMousePressed(evt -> handleCanvasMousePress(evt));
 		canvasGrid.setOnMouseDragged(evt -> handleCanvasMouseDrag(evt));
 		canvasGrid.setOnMouseReleased(evt -> handleCanvasMouseReleased(evt));
@@ -147,8 +149,6 @@ public class MainEditorController {
 					
 				}
 			}
-
-				
 
 		}
 		
@@ -243,6 +243,7 @@ public class MainEditorController {
 
 	}
 
+	
 	@FXML
 	public void selectHeight() {
 		Grid grid = App.getGrid();
@@ -268,7 +269,7 @@ public class MainEditorController {
 	
 
 	@FXML
-	public void unSelectPressed() {
+	void unSelectPressed() {
 		if (clickedTileSet.isEmpty()) {
 			new Alert(AlertType.ERROR, "There are no selected tiles.").showAndWait();
 		}else {
@@ -318,7 +319,11 @@ public class MainEditorController {
 		double newElevation = 0;
 		ToggleButton buttonClicked = (ToggleButton) toolButtonsGroup.getSelectedToggle();
 		if (buttonClicked == raiseElevationButton) {
-			newElevation = tile.getElevation() + sliderValue;
+			if (sliderValue == 0) {
+				new Alert(AlertType.ERROR, "Select an elevation to raise the tiles by").showAndWait();
+			}else {
+				newElevation = tile.getElevation() + sliderValue;
+			}
 		} else if (buttonClicked == lowerElevationButton) {
 			newElevation = tile.getElevation() - sliderValue;
 		}
@@ -425,6 +430,7 @@ public class MainEditorController {
 			}
 		}
 	}
+	
 	@FXML
 	public void exportOBJAction() {
 		FileChooser saveChooser = new FileChooser();

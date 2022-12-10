@@ -47,7 +47,6 @@ public class Tile implements Cloneable {
    
 	@Override
 	public Tile clone() {
-		// this works because we only have primitive types in Tile
 		try {
 			return (Tile) (super.clone());
 		} catch (CloneNotSupportedException ex) {

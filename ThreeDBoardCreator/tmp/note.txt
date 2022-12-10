@@ -1,0 +1,1 @@
+This folder is just to store some temporary files for the unit testing 
