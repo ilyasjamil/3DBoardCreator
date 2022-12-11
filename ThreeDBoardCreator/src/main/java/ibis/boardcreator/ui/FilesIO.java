@@ -33,7 +33,7 @@ public class FilesIO {
 	 */
 
 	@FXML
-	Grid openFile(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
+	public Grid openFile(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
 		FileChooser openChooser = new FileChooser();
 		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Grids (*.MAP)", "*.MAP");
 		openChooser.getExtensionFilters().add(extFilter);
