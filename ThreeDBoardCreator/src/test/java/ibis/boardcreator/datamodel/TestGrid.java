@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.junit.jupiter.api.Test;
 
@@ -116,6 +117,23 @@ class TestGrid {
 		assertEquals(4.0, openedElevThree);
 		assertEquals(true, openedPointyOne);
 
+	}
+	//Testing the export method by loading an object exported through
+	//the software and comparing it to the object it should look like
+	@Test
+	void testExportingFile() throws IOException{
+		//mapObject stores a 3D object of a grid of one row, 2 columns with one of their elevation being 0, and the other being 10, exported via the app
+		File MapObject = new File("tmp/OneRowMap.OBJ");
+		//testMapObject stores what the 3D object of MapObject should look like
+		File testMapObject = new File("tmp/testMap.OBJ");
+	    assertEquals(-1, Files.mismatch(MapObject.toPath(), testMapObject.toPath()));
+
+
+		
+		
+		
+		
+		
 	}
 
 }
