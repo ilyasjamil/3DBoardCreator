@@ -441,11 +441,6 @@ public class MainEditorController {
 		} else if (buttonClicked == lowerElevationButton) {
 			newElevation = tile.getElevation() - sliderValue;
 		}
-		if (newElevation >= 10) {
-			newElevation = 10;
-		} else if (newElevation <= 0) {
-			newElevation = 0;
-		}
 		tile.setElevation(newElevation);
 		drawGrid();
 		currentTileModified = tile;
