@@ -31,6 +31,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("Main_Editor"), 840, 680);
         mainWindow = stage;
+        stage.setTitle("3D Board Creator");
         stage.setScene(scene);
 
         stage.show();
