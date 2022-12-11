@@ -1,6 +1,7 @@
 package ibis.boardcreator.ui;
 
 import ibis.boardcreator.datamodel.Grid;
+
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -14,6 +15,8 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
+
+// Assistance: Got some help from Geniune Coder YouTube videos
 
 public class ThreeDPreviewController extends Application {
 

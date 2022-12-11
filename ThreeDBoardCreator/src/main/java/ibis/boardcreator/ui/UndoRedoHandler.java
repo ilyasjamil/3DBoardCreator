@@ -2,6 +2,8 @@ package ibis.boardcreator.ui;
 
 import java.util.Stack;
 
+// Assistance: From the Drawing App class from exam 2 practice
+
 import ibis.boardcreator.datamodel.Grid;
 import ibis.boardcreator.ui.MainEditorController.EditorState;
 

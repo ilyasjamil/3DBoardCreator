@@ -10,15 +10,16 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
-
-
+import ibis.boardcreator.ui.App;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class GridIO {
-	
+
 	/**
 	 * Saves the grid to the output file to Json format using Gson library
 	 * 
-	 * @param grid   The grid to be saved
+	 * @param grid      The grid to be saved
 	 * @param ouputFile The file to save the grid to
 	 * 
 	 */
@@ -28,22 +29,28 @@ public class GridIO {
 		gson.toJson(grid, writer);
 		writer.close();
 	}
-	
+
 	/**
-	 * returns the grid that is in the file by converting it to java object from Json file using Gson library
+	 * returns the grid that is in the file by converting it to java object from
+	 * Json file using Gson library
 	 * 
 	 * @param inputFile The file that contains the grid
 	 * 
 	 * @return the grid that is in the file
 	 */
-	public static Grid load2dMapFromJSONFile(File inputFile) throws JsonSyntaxException, JsonIOException, IOException {
+	public static Grid load2dMapFromJSONFile(File inputFile) throws JsonSyntaxException, JsonIOException, IOException, NullPointerException {
 		Gson gson = new Gson();
-		FileReader reader = new FileReader(inputFile);
-		Grid grid = gson.fromJson(reader, Grid.class);
-		reader.close();
-		return grid;
+		try {
+			FileReader reader = new FileReader(inputFile);
+			Grid grid = gson.fromJson(reader, Grid.class);
+			reader.close();
+			return grid;
+		}catch (NullPointerException ex) {
+			new Alert(AlertType.INFORMATION, "You didn't open any files.").showAndWait();
+		}
+		return App.getGrid();
+		
+		
 	}
-	
-	
-	
+
 }

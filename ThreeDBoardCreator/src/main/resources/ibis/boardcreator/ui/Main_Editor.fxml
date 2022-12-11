@@ -54,6 +54,18 @@
                      </accelerator></MenuItem>
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Edit">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#undoAction" text="Undo">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#redoAction" text="Redo">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="Y" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Preview">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#switchToThreeDPreview" text="preview 3D">
@@ -70,13 +82,13 @@
       </MenuBar>
    </top>
    <right>
-      <VBox alignment="CENTER" prefHeight="414.0" prefWidth="250.0" spacing="14.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="348.0" prefWidth="254.0" spacing="14.0" BorderPane.alignment="CENTER">
          <effect>
             <ColorAdjust saturation="-0.06" />
          </effect>
 
                <children>
-            <Label prefHeight="19.0" prefWidth="74.0" text="Elevation">
+            <Label prefHeight="22.0" prefWidth="70.0" text="Elevation">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font></Label>
@@ -89,23 +101,26 @@
                <font>
                   <Font size="18.0" />
                </font>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
             </Label>
-            <GridPane prefHeight="176.0" prefWidth="250.0">
+            <GridPane prefHeight="214.0" prefWidth="254.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.19996795654296" minWidth="10.0" prefWidth="117.60003204345702" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="134.39996795654298" minWidth="10.0" prefWidth="130.39996795654298" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.19996795654296" minWidth="10.0" prefWidth="113.6000244140625" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="149.00009765625" minWidth="10.0" prefWidth="139.99997558593753" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="58.79999389648438" minHeight="10.0" prefHeight="54.00000610351563" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="33.20001831054688" minHeight="10.0" prefHeight="18.79999389648438" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="48.80000610351562" minHeight="10.0" prefHeight="47.999987792968746" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="58.60001220703124" minHeight="10.0" prefHeight="50.40001220703127" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="86.40001220703124" minHeight="10.0" prefHeight="82.40001220703124" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="33.20001831054688" minHeight="6.399987792968744" prefHeight="10.399987792968744" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button mnemonicParsing="false" onAction="#selectHeight" prefHeight="26.0" prefWidth="134.0" text="Same Height" textFill="#114f5b" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <Button mnemonicParsing="false" onAction="#selectHeight" prefHeight="49.0" prefWidth="221.0" text="Same Height" textFill="#114f5b" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <GridPane.margin>
-                        <Insets right="10.0" />
+                        <Insets bottom="15.0" right="15.0" />
                      </GridPane.margin>
                      <tooltip>
                         <Tooltip text="Select one tile to see all the tiles that have the same height" />
@@ -114,9 +129,9 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
-                  <ToggleButton fx:id="selectButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Select Tiles" textFill="#2a1eb1">
+                  <ToggleButton fx:id="selectButton" mnemonicParsing="false" prefHeight="29.0" prefWidth="132.0" text="Select Tiles" textFill="#2a1eb1">
                      <GridPane.margin>
-                        <Insets right="10.0" />
+                        <Insets bottom="15.0" right="5.0" />
                      </GridPane.margin>
                      <toggleGroup>
                         <ToggleGroup fx:id="toolButtonsGroup" />
@@ -125,16 +140,16 @@
                         <Font name="System Bold Italic" size="12.0" />
                      </font>
                   </ToggleButton>
-                  <Button mnemonicParsing="false" onAction="#unSelectPressed" prefHeight="26.0" prefWidth="118.0" text="UnSelect Tiles" textFill="#2a1eb1" GridPane.columnIndex="1">
+                  <Button mnemonicParsing="false" onAction="#unSelectPressed" prefHeight="29.0" prefWidth="146.0" text="UnSelect Tiles" textFill="#2a1eb1" GridPane.columnIndex="1">
                      <GridPane.margin>
-                        <Insets right="10.0" />
+                        <Insets bottom="15.0" right="15.0" />
                      </GridPane.margin>
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font></Button>
-                  <Button fx:id="setBtn" mnemonicParsing="false" onAction="#setPressed" prefHeight="26.0" prefWidth="121.0" text="Set Selected Tile" textFill="#2c842b" GridPane.rowIndex="1">
+                  <Button fx:id="setBtn" mnemonicParsing="false" onAction="#setPressed" prefHeight="38.0" prefWidth="110.0" text="Set Selected Tile" textFill="#2c842b" GridPane.rowIndex="1">
                      <GridPane.margin>
-                        <Insets right="10.0" />
+                        <Insets bottom="15.0" right="5.0" />
                      </GridPane.margin>
                      <font>
                         <Font name="System Bold" size="12.0" />
@@ -143,16 +158,19 @@
                         <Tooltip text="Select atleast one tile to the set the tile to the elevation chosen" />
                      </tooltip>
                   </Button>
-                  <Button fx:id="clearTilesBtn" mnemonicParsing="false" onAction="#clearSelected" text="Clear Selected Tiles" textFill="#2c842b" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Button fx:id="clearTilesBtn" mnemonicParsing="false" onAction="#clearSelected" prefHeight="34.0" prefWidth="126.0" text="Clear Selected Tile" textFill="#2c842b" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                      <tooltip>
                         <Tooltip text="Select atleast one tile to clear the tile and set the elevation to 0" />
-                     </tooltip></Button>
-                  <Button mnemonicParsing="false" onAction="#selectedARegion" prefHeight="26.0" prefWidth="124.0" text="Select Region" textFill="#bc333f" GridPane.rowIndex="2">
+                     </tooltip>
                      <GridPane.margin>
-                        <Insets right="10.0" />
+                        <Insets bottom="15.0" right="15.0" />
+                     </GridPane.margin></Button>
+                  <Button mnemonicParsing="false" onAction="#selectedARegion" prefHeight="47.0" prefWidth="110.0" text="Select Region" textFill="#bc333f" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="15.0" right="5.0" />
                      </GridPane.margin>
                      <tooltip>
                         <Tooltip text="Select two tiles in order to create a region" />
@@ -161,24 +179,24 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
-                  <ComboBox fx:id="featuresComboBox" prefHeight="43.0" prefWidth="110.0" promptText="Features" GridPane.rowIndex="3">
+                  <ComboBox fx:id="featuresComboBox" prefHeight="72.0" prefWidth="130.0" promptText="Features" GridPane.rowIndex="3">
                      <GridPane.margin>
-                        <Insets right="10.0" />
+                        <Insets bottom="15.0" right="5.0" />
                      </GridPane.margin></ComboBox>
-                  <Button mnemonicParsing="false" onAction="#addFeatureAction" prefHeight="26.0" prefWidth="159.0" text="Add" textFill="#e424cb" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <Button mnemonicParsing="false" onAction="#addFeatureAction" prefHeight="33.0" prefWidth="82.0" text="Add" textFill="#e424cb" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <GridPane.margin>
-                        <Insets right="50.0" />
+                        <Insets bottom="15.0" right="50.0" />
                      </GridPane.margin>
                      <tooltip>
-                        <Tooltip text="Select atleast one tile before clicking on add and select an area that is further from the borders of the grid to fit the feature" />
+                        <Tooltip text="Select  one tile before clicking on add and select an area that is further from the borders of the grid to fit the feature" />
                      </tooltip>
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
-                  <Button fx:id="pointyTileButton" mnemonicParsing="false" onAction="#pointyTileSelected" prefHeight="26.0" prefWidth="136.0" text="Set Pointy Tiles" textFill="#2c842b" GridPane.rowIndex="4">
+                  <Button fx:id="pointyTileButton" mnemonicParsing="false" onAction="#pointyTileSelected" prefHeight="26.0" prefWidth="131.0" text="Set Pointy Tiles" textFill="#2c842b" GridPane.rowIndex="4">
                      <GridPane.margin>
-                        <Insets right="10.0" top="20.0" />
+                        <Insets right="5.0" />
                      </GridPane.margin>
                      <font>
                         <Font name="System Bold" size="12.0" />
@@ -186,44 +204,6 @@
                      <tooltip>
                         <Tooltip text="Select atleast one tile to set it to be a pointy tile" />
                      </tooltip>
-                  </Button>
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </GridPane>
-            <Label prefHeight="22.0" prefWidth="97.0" text="Other Tools">
-               <font>
-                  <Font size="18.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="20.0" />
-               </VBox.margin>
-            </Label>
-            <GridPane prefHeight="44.0" prefWidth="250.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.4" minWidth="10.0" prefWidth="114.200048828125" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.199951171875" minWidth="10.0" prefWidth="131.199951171875" />
-              </columnConstraints>
-              <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Button fx:id="undoBtn" mnemonicParsing="false" onAction="#undoAction" prefHeight="26.0" prefWidth="135.0" text="Undo">
-                     <GridPane.margin>
-                        <Insets right="10.0" />
-                     </GridPane.margin>
-                     <font>
-                        <Font name="System Bold Italic" size="12.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="redoBtn" mnemonicParsing="false" onAction="#redoAction" prefHeight="26.0" prefWidth="156.0" text="Redo" GridPane.columnIndex="1">
-                     <GridPane.margin>
-                        <Insets right="25.0" />
-                     </GridPane.margin>
-                     <font>
-                        <Font name="System Bold Italic" size="12.0" />
-                     </font>
                   </Button>
                </children>
                <VBox.margin>

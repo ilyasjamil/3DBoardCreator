@@ -117,5 +117,4 @@ class TestGrid {
 		assertEquals(true, openedPointyOne);
 
 	}
-
 }

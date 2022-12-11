@@ -6,6 +6,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+
+import ibis.boardcreator.datamodel.Features;
+import ibis.boardcreator.datamodel.FilesIO;
 import ibis.boardcreator.datamodel.Grid;
 import ibis.boardcreator.datamodel.GridIO;
 import ibis.boardcreator.datamodel.Tile;
@@ -31,7 +34,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -73,16 +75,10 @@ public class MainEditorController {
 	private ToggleGroup toolButtonsGroup;
 
 	@FXML
-	private Button undoBtn;
-
-	@FXML
-	private Button redoBtn;
-
-	@FXML
 	private Menu aboutScreen;
 
 	private HashSet<Tile> clickedTileSet;
-	
+
 	private UndoRedoHandler undoRedoHandler;
 
 	@FXML
@@ -94,6 +90,8 @@ public class MainEditorController {
 	@FXML
 	private TextField numRows;
 
+	FilesIO file = new FilesIO();
+
 	/**
 	 * Initialize the controller
 	 */
@@ -104,9 +102,13 @@ public class MainEditorController {
 		canvasGrid.setOnMouseReleased(evt -> handleCanvasMouseReleased(evt));
 		clickedTileSet = new HashSet<>();
 		undoRedoHandler = new UndoRedoHandler(createMemento());
-		featuresComboBox.getItems().add("Mountains");
-		featuresComboBox.getItems().add("Pitt");
-		featuresComboBox.getItems().add("Volcanos");
+
+		featuresComboBox.getItems().add("Mountain");
+		featuresComboBox.getItems().add("Pit");
+		featuresComboBox.getItems().add("Volcano");
+		featuresComboBox.getItems().add("Augie A");
+		featuresComboBox.getItems().add("Road");
+
 		clearMapBtn.setStyle("-fx-background-color: #32a5cb");
 		resizeButton.setStyle("-fx-background-color: #7ababb");
 		drawGrid();
@@ -123,16 +125,20 @@ public class MainEditorController {
 	 * 
 	 * @return the size of a tile
 	 */
+
 	private double getTileSize() {
 		Grid grid = App.getGrid();
 		return canvasGrid.getHeight() / Math.max(grid.getNumColumns(), grid.getNumRows());
 	}
 
 	/**
-	 * draws the grid depending on the number of rows and columns and sets the elevation of tiles
-	 * checks if the tiles are selected and if they are, it draws the tile differently to show that it is selected
-	 * checks if the tiles are pointy and if they are, it draws the tiles differently to show that it is selected
+	 * draws the grid depending on the number of rows and columns and sets the
+	 * elevation of tiles checks if the tiles are selected and if they are, it draws
+	 * the tile differently to show that it is selected checks if the tiles are
+	 * pointy and if they are, it draws the tiles differently to show that it is
+	 * selected
 	 */
+
 	private void drawGrid() {
 		Grid grid = App.getGrid();
 		GraphicsContext gc = canvasGrid.getGraphicsContext2D();
@@ -166,7 +172,7 @@ public class MainEditorController {
 			gc.strokeRect(x, y, getTileSize(), getTileSize());
 		}
 	}
-	
+
 	/**
 	 * adds multiple objects to the program like mountains, pitts, and more to draw
 	 * them with one button click
@@ -174,43 +180,74 @@ public class MainEditorController {
 	 * @param event
 	 */
 	@FXML
-	void addFeatureAction(ActionEvent event){
-		int r;
-		int c;
-		int[][] feature;
+	void addFeatureAction(ActionEvent event) {
 		if (clickedTileSet.size() == 0) {
-			new Alert(AlertType.ERROR, "Select atleast one tile").showAndWait();
-		}else {
-			for (Tile tile : clickedTileSet) {
-				r = tile.getRow();
-				c = tile.getColumn();
-				if (featuresComboBox.getValue().equals("Mountains")) {
-					feature = Features.getMountain();
-				} else if (featuresComboBox.getValue().equals("Pitt")) {
-					feature = Features.getPit();
-				} else {
-					feature = Features.getVolcano();
-				}
+			new Alert(AlertType.ERROR, "Select one tile").showAndWait();
+		} else {
+			if (clickedTileSet.size() == 1) {
 				try {
-					for (int i = r; i < r + feature.length; i++) {
-						for (int j = c; j < c + feature[0].length; j++) {
-							App.getGrid().getTileAt(i, j).setElevation(feature[i - r][j - c]);
-						}
-					}
-					drawGrid();
-					undoRedoHandler.saveState(createMemento());
-				}catch(ArrayIndexOutOfBoundsException ex){
-					new Alert(AlertType.ERROR, "Cannot draw the feature in this area").showAndWait();
+					int[][] feature = getFeature();
+					setElevationForFeature(feature);
 				}catch(NullPointerException ex) {
 					new Alert(AlertType.ERROR, "Select a feature from the drop down").showAndWait();
 				}
+			}else {
+				new Alert(AlertType.WARNING, "Select only one tile to avoid overlaps and to make sure the feature fits in the grid for each of the tiles selected").showAndWait();
 			}
+
 		}
+		drawGrid();
+		undoRedoHandler.saveState(createMemento());
 	}
 	
 	/**
+	 * returns the feature chosen from the drop down
+	 * 
+	 * @return the feature chosen from the drop down
+	 */
+	private int[][] getFeature() {
+		int[][] feature = null;
+		if (featuresComboBox.getValue().equals("Mountain")) {
+			feature = Features.getMountain();
+		} else if (featuresComboBox.getValue().equals("Pit")) {
+			feature = Features.getPit();
+		} else if (featuresComboBox.getValue().equals("Road")) {
+			feature = Features.getRoad();
+		} else if (featuresComboBox.getValue().equals("Augie A")) {
+			feature = Features.getAugieA();
+		} else if (featuresComboBox.getValue().equals("Volcano")) {
+			feature = Features.getVolcano();
+		}
+		return feature;	
+	}
+	
+	/**
+	 * Sets the elevation of the tiles starting from selected tile in order to create the feature
+	 * 
+	 * @param the feature to be drawn on the grid
+	 */
+	private void setElevationForFeature(int[][] feature) {
+		Grid grid = App.getGrid();
+		Tile clickedTile = null;
+		for (Tile tile : clickedTileSet) {
+			clickedTile = tile;
+		}
+		int r = clickedTile.getRow();
+		int c = clickedTile.getColumn();
+		if (!(r + feature.length > grid.getNumColumns() || c + feature[0].length > grid.getNumRows())) {
+			for (int i = r; i < r + feature.length; i++) {
+				for (int j = c; j < c + feature[0].length; j++) {
+					App.getGrid().getTileAt(i, j).setElevation(feature[i - r][j - c]);
+				}
+			}
+		}else {
+			new Alert(AlertType.ERROR, "Cannot draw the feature in this area.").showAndWait();
+		}
+	}
+	/**
 	 * Allows you to select a region when two tiles (corners) are selected
 	 */
+
 	@FXML
 	void selectedARegion() {
 		Grid grid = App.getGrid();
@@ -233,6 +270,7 @@ public class MainEditorController {
 				}
 				if (tile.getColumn() < startCol) {
 					startCol = tile.getColumn();
+
 				}
 			}
 			for (int r = startRow; r <= endRow; r++) {
@@ -248,20 +286,23 @@ public class MainEditorController {
 	}
 
 	/**
-	 * When a tile is selected and button for pointy is selected, it sets the tile to pointy.
+	 * When a tile is selected and button for pointy is selected, it sets the tile
+	 * to pointy.
 	 */
 	@FXML
 	void pointyTileSelected(ActionEvent event) {
 		if (clickedTileSet.isEmpty()) {
 			new Alert(AlertType.ERROR, "Select atleast one tile.").showAndWait();
-		}else {
-			for (Tile tile :clickedTileSet) {
+
+		} else {
+			for (Tile tile : clickedTileSet) {
 				if (!tile.getPointy()) {
 					continue;
-				}else {
+				} else {
 					new Alert(AlertType.ERROR, "The one selected is already pointy").showAndWait();
 				}
 			}
+
 			for (Tile tile : clickedTileSet) {
 				tile.setPointy(true);
 			}
@@ -273,6 +314,7 @@ public class MainEditorController {
 	/**
 	 * clears the selected tiles
 	 */
+
 	@FXML
 	void clearSelected() {
 		if (clickedTileSet.isEmpty()) {
@@ -286,10 +328,11 @@ public class MainEditorController {
 			undoRedoHandler.saveState(createMemento());
 		}
 	}
-	
+
 	/**
 	 * Sets the selected tiles to the specified elevation
 	 */
+
 	@FXML
 	void setPressed(ActionEvent event) {
 		if (clickedTileSet.isEmpty()) {
@@ -308,6 +351,7 @@ public class MainEditorController {
 	/**
 	 * Selects all the tiles that have the same elevation as the selected tile
 	 */
+
 	@FXML
 	void selectHeight() {
 		Grid grid = App.getGrid();
@@ -365,8 +409,9 @@ public class MainEditorController {
 	/**
 	 * handles mouse drags on the grid
 	 * 
-	 * @param evt- the event
+	 * @param evt -drag event
 	 */
+
 	private void handleCanvasMouseDrag(MouseEvent evt) {
 		int x = (int) (evt.getX());
 		int y = (int) (evt.getY());
@@ -380,6 +425,7 @@ public class MainEditorController {
 			} else if (dragTile != currentTileModified && buttonClicked != selectButton && buttonClicked != null) {
 				adjustTileHeight(dragTile);
 			}
+
 		}
 	}
 
@@ -388,6 +434,7 @@ public class MainEditorController {
 	 * 
 	 * @param evt- the event
 	 */
+
 	private void handleCanvasMouseReleased(MouseEvent evt) {
 		undoRedoHandler.saveState(createMemento());
 	}
@@ -420,18 +467,18 @@ public class MainEditorController {
 	 * 
 	 * @param tile
 	 */
+
 	private void selectButtonSelected(Tile tile) {
 		clickedTileSet.add(tile);
 		drawGrid();
 	}
-
-	
 
 	/**
 	 * resets the map to an empty one
 	 * 
 	 * @param event
 	 */
+
 	@FXML
 	void clearMapPressed(ActionEvent event) {
 		clickedTileSet.clear();
@@ -451,23 +498,18 @@ public class MainEditorController {
 	 * 
 	 * @param event
 	 */
+
 	@FXML
 	void openFileAction(ActionEvent event) {
-		FileChooser openChooser = new FileChooser();
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Grids (*.MAP)", "*.MAP");
-		openChooser.getExtensionFilters().add(extFilter);
-		File inputFile = openChooser.showOpenDialog(App.getMainWindow());
-		if (inputFile != null) {
-			try {
-				Grid grid = GridIO.load2dMapFromJSONFile(inputFile);
-				App.setGrid(grid);
-				drawGrid();
-			} catch (FileNotFoundException ex) {
-				new Alert(AlertType.ERROR, "The file you tried to open could not be found.").showAndWait();
-			} catch (IOException ex) {
-				new Alert(AlertType.ERROR,
-						"Error opening file.  Did you choose a valid .movieList file (which uses JSON format?)").show();
-			}
+		try {
+			Grid grid = file.openFile(event);
+			App.setGrid(grid);
+			drawGrid();
+		} catch (FileNotFoundException ex) {
+			new Alert(AlertType.ERROR, "The file you tried to open could not be found.").showAndWait();
+		} catch (IOException ex) {
+			new Alert(AlertType.ERROR,
+					"Error opening file.  Did you choose a valid .movieList file (which uses JSON format?)").show();
 		}
 	}
 
@@ -478,77 +520,16 @@ public class MainEditorController {
 	 */
 	@FXML
 	void saveFileAsAction(ActionEvent event) {
-		FileChooser saveChooser = new FileChooser();
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Grids (*.MAP)", "*.MAP");
-		saveChooser.getExtensionFilters().add(extFilter);
-		File outputFile = saveChooser.showSaveDialog(App.getMainWindow());
-		if (outputFile != null) {
-			Grid grid = App.getGrid();
-			try {
-				GridIO.save2dMapAsJSONFile(grid, outputFile);
-			} catch (IOException ex) {
-				new Alert(AlertType.ERROR, "An I/O error occurred while trying to save this file.").showAndWait();
-			}
-		}
+		file.saveFileAs(event);
 	}
 
 	/**
 	 * exports the current file to a 3D .OBJ file
 	 */
+
 	@FXML
 	public void exportOBJAction() {
-		FileChooser saveChooser = new FileChooser();
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("OBJ File(*.OBJ)", "*.OBJ");
-		saveChooser.getExtensionFilters().add(extFilter);
-		File outputFile = saveChooser.showSaveDialog(App.getMainWindow());
-		if (outputFile != null) {
-			Grid grid = App.getGrid();
-			Tile[][] board = grid.getBoard();
-			try {
-				FileWriter writer = new FileWriter(outputFile);
-				writer.write("o " + 1 + System.lineSeparator());
-				for (int i = 0; i < board.length; i++) {
-					for (int j = 0; j < board[0].length; j++) {
-						Tile tile = board[i][j];
-						int r = tile.getRow();
-						int c = tile.getColumn();
-						double e = tile.getElevation();
-						writer.write("v " + c + " " + r + " " + e + System.lineSeparator());
-						writer.write("v " + c + " " + r + " " + 0 + System.lineSeparator());
-						writer.write("v " + c + " " + String.valueOf(r + 1) + " " + 0 + System.lineSeparator());
-						writer.write("v " + c + " " + String.valueOf(r + 1) + " " + e + System.lineSeparator());
-						writer.write("v " + String.valueOf(c + 1) + " " + r + " " + e + System.lineSeparator());
-						writer.write("v " + String.valueOf(c + 1) + " " + r + " " + 0 + System.lineSeparator());
-						writer.write("v " + String.valueOf(c + 1) + " " + String.valueOf(r + 1) + " " + 0
-								+ System.lineSeparator());
-						writer.write("v " + String.valueOf(c + 1) + " " + String.valueOf(r + 1) + " " + e
-								+ System.lineSeparator());
-					}
-				}
-				writer.write("usemtl Default" + System.lineSeparator());
-
-				for (int i = 0; i < board.length * board[0].length; i++) {
-					writer.write("f " + String.valueOf(8 * i + 4) + " " + String.valueOf(8 * i + 3) + " "
-							+ String.valueOf(8 * i + 2) + " " + String.valueOf(8 * i + 1) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 2) + " " + String.valueOf(8 * i + 6) + " "
-							+ String.valueOf(8 * i + 5) + " " + String.valueOf(8 * i + 1) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 3) + " " + String.valueOf(8 * i + 7) + " "
-							+ String.valueOf(8 * i + 6) + " " + String.valueOf(8 * i + 2) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 8) + " " + String.valueOf(8 * i + 7) + " "
-							+ String.valueOf(8 * i + 3) + " " + String.valueOf(8 * i + 4) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 5) + " " + String.valueOf(8 * i + 8) + " "
-							+ String.valueOf(8 * i + 4) + " " + String.valueOf(8 * i + 1) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 6) + " " + String.valueOf(8 * i + 7) + " "
-							+ String.valueOf(8 * i + 8) + " " + String.valueOf(8 * i + 5) + System.lineSeparator());
-				}
-				writer.close();
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		}
-
+		file.exportOBJ();
 	}
 
 	/**
@@ -556,6 +537,7 @@ public class MainEditorController {
 	 * 
 	 * @param event
 	 */
+
 	@FXML
 	void redoAction(ActionEvent event) {
 		EditorState state = undoRedoHandler.redo();
@@ -635,6 +617,7 @@ public class MainEditorController {
 	 * 
 	 * @throws IOException
 	 */
+
 	@FXML
 	private void switchToResizeChoice() throws IOException {
 		clickedTileSet.clear();
@@ -672,22 +655,6 @@ public class MainEditorController {
 					@Override
 					public void run() {
 						clearTilesBtn.fire();
-					}
-				});
-		// CTRL+Z to undo
-		undoBtn.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN),
-				new Runnable() {
-					@Override
-					public void run() {
-						undoBtn.fire();
-					}
-				});
-		// CTRL+R to redo
-		redoBtn.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN),
-				new Runnable() {
-					@Override
-					public void run() {
-						redoBtn.fire();
 					}
 				});
 
