@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
+
 import ibis.boardcreator.datamodel.Features;
 import ibis.boardcreator.datamodel.FilesIO;
 import ibis.boardcreator.datamodel.Grid;
@@ -162,7 +165,6 @@ public class MainEditorController {
 
 				}
 			}
-
 		}
 
 		for (Tile tile : clickedTileSet) {
@@ -497,20 +499,16 @@ public class MainEditorController {
 	 * handles file opening
 	 * 
 	 * @param event
+	 * @throws IOException 
+	 * @throws JsonIOException 
+	 * @throws JsonSyntaxException 
 	 */
 
 	@FXML
-	void openFileAction(ActionEvent event) {
-		try {
-			Grid grid = file.openFile(event);
-			App.setGrid(grid);
-			drawGrid();
-		} catch (FileNotFoundException ex) {
-			new Alert(AlertType.ERROR, "The file you tried to open could not be found.").showAndWait();
-		} catch (IOException ex) {
-			new Alert(AlertType.ERROR,
-					"Error opening file.  Did you choose a valid .movieList file (which uses JSON format?)").show();
-		}
+	void openFileAction(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
+		Grid grid = file.openFile(event);
+		App.setGrid(grid);
+		drawGrid();
 	}
 
 	/**

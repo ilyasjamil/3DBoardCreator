@@ -12,7 +12,7 @@
             <Font name="System Bold" size="29.0" />
          </font>
       </Label>
-      <Label layoutX="22.0" layoutY="86.0" prefHeight="43.0" prefWidth="531.0" text="A 3D map creator that allows you to create customized terrains that can be exported to 3D .OBJ files" />
+      <Label layoutX="16.0" layoutY="86.0" prefHeight="43.0" prefWidth="573.0" text="A 3D map creator that allows you to create customized tiles on a grid that can be exported to 3D .OBJ files" />
       <Label layoutX="22.0" layoutY="150.0" prefHeight="18.0" prefWidth="57.0" text="Shortcuts:">
          <font>
             <Font name="System Bold Italic" size="12.0" />
@@ -34,5 +34,6 @@
             <Font name="System Bold Italic" size="14.0" />
          </font>
       </Label>
+      <Label alignment="TOP_LEFT" layoutX="158.0" layoutY="301.0" prefHeight="18.0" prefWidth="274.0" text="Special thanks to Heran for doing QA testing for us" />
    </children>
 </AnchorPane>
