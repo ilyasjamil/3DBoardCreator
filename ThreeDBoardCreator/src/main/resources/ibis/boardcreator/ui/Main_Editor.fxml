@@ -265,6 +265,9 @@
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
+               <tooltip>
+                  <Tooltip text="This button allows you to raise tiles to the selected elevation by clicking on the tiles " />
+               </tooltip>
             </ToggleButton>
             <ToggleButton fx:id="lowerElevationButton" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="110.0" prefWidth="83.0" text="Lower Tiles" toggleGroup="$toolButtonsGroup" GridPane.rowIndex="1">
                <GridPane.margin>
@@ -273,6 +276,9 @@
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
+               <tooltip>
+                  <Tooltip text="This button allows you to lower tiles to the selected elevation by clicking on the tiles " />
+               </tooltip>
             </ToggleButton>
          </children>
       </GridPane>
