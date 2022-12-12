@@ -90,6 +90,7 @@ public class FilesIO {
 			try {
 				FileWriter writer = new FileWriter(outputFile);
 				writer.write("o " + 1 + System.lineSeparator());
+				int vertex = 1;
 				for (int i = 0; i < board.length; i++) {
 					for (int j = 0; j < board[0].length; j++) {
 						Tile tile = board[i][j];
@@ -106,32 +107,45 @@ public class FilesIO {
 								+ System.lineSeparator());
 						writer.write("v " + String.valueOf(c + 1) + " " + String.valueOf(r + 1) + " " + e
 								+ System.lineSeparator());
+						if (tile.getPointy()) {
+							writer.write("v " + String.valueOf(c + .5) + " " + String.valueOf(r + .5) + " "
+									+ String.valueOf(e + 2) + System.lineSeparator());
+						}
+						writer.write("f " + String.valueOf(vertex + 3) + " " + String.valueOf(vertex + 2) + " "
+								+ String.valueOf(vertex + 1) + " " + String.valueOf(vertex) + System.lineSeparator());
+						writer.write("f " + String.valueOf(vertex + 1) + " " + String.valueOf(vertex + 5) + " "
+								+ String.valueOf(vertex + 4) + " " + String.valueOf(vertex) + System.lineSeparator());
+						writer.write("f " + String.valueOf(vertex + 2) + " " + String.valueOf(vertex + 6) + " "
+								+ String.valueOf(vertex + 5) + " " + String.valueOf(vertex + 1)
+								+ System.lineSeparator());
+						writer.write("f " + String.valueOf(vertex + 7) + " " + String.valueOf(vertex + 6) + " "
+								+ String.valueOf(vertex + 2) + " " + String.valueOf(vertex + 3)
+								+ System.lineSeparator());
+						writer.write("f " + String.valueOf(vertex + 4) + " " + String.valueOf(vertex + 7) + " "
+								+ String.valueOf(vertex + 3) + " " + String.valueOf(vertex) + System.lineSeparator());
+						writer.write("f " + String.valueOf(vertex + 5) + " " + String.valueOf(vertex + 6) + " "
+								+ String.valueOf(vertex + 7) + " " + String.valueOf(vertex + 4)
+								+ System.lineSeparator());
+						if (tile.getPointy()) {
+							writer.write("f " + String.valueOf(vertex) + " " + String.valueOf(vertex + 3) + " "
+									+ String.valueOf(vertex + 8) + System.lineSeparator());
+							writer.write("f " + String.valueOf(vertex) + " " + String.valueOf(vertex + 4) + " "
+									+ String.valueOf(vertex + 8) + System.lineSeparator());
+							writer.write("f " + String.valueOf(vertex + 3) + " " + String.valueOf(vertex + 7) + " "
+									+ String.valueOf(vertex + 8) + System.lineSeparator());
+							writer.write("f " + String.valueOf(vertex + 4) + " " + String.valueOf(vertex + 7) + " "
+									+ String.valueOf(vertex + 8) + System.lineSeparator());
+							vertex += 1;
+						}
+						vertex += 8;
 					}
-				}
-				writer.write("usemtl Default" + System.lineSeparator());
-
-				for (int i = 0; i < board.length * board[0].length; i++) {
-					writer.write("f " + String.valueOf(8 * i + 4) + " " + String.valueOf(8 * i + 3) + " "
-							+ String.valueOf(8 * i + 2) + " " + String.valueOf(8 * i + 1) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 2) + " " + String.valueOf(8 * i + 6) + " "
-							+ String.valueOf(8 * i + 5) + " " + String.valueOf(8 * i + 1) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 3) + " " + String.valueOf(8 * i + 7) + " "
-							+ String.valueOf(8 * i + 6) + " " + String.valueOf(8 * i + 2) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 8) + " " + String.valueOf(8 * i + 7) + " "
-							+ String.valueOf(8 * i + 3) + " " + String.valueOf(8 * i + 4) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 5) + " " + String.valueOf(8 * i + 8) + " "
-							+ String.valueOf(8 * i + 4) + " " + String.valueOf(8 * i + 1) + System.lineSeparator());
-					writer.write("f " + String.valueOf(8 * i + 6) + " " + String.valueOf(8 * i + 7) + " "
-							+ String.valueOf(8 * i + 8) + " " + String.valueOf(8 * i + 5) + System.lineSeparator());
 				}
 				writer.close();
 
 			} catch (IOException e) {
 				e.printStackTrace();
+
 			}
-
 		}
-
 	}
-
 }
