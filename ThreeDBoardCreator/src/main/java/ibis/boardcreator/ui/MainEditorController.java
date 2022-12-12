@@ -1,10 +1,6 @@
 package ibis.boardcreator.ui;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.google.gson.JsonIOException;
@@ -13,7 +9,6 @@ import com.google.gson.JsonSyntaxException;
 import ibis.boardcreator.datamodel.Features;
 import ibis.boardcreator.datamodel.FilesIO;
 import ibis.boardcreator.datamodel.Grid;
-import ibis.boardcreator.datamodel.GridIO;
 import ibis.boardcreator.datamodel.Tile;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -243,7 +238,7 @@ public class MainEditorController {
 				}
 			}
 		}else {
-			new Alert(AlertType.ERROR, "Cannot draw the feature in this area.").showAndWait();
+			new Alert(AlertType.ERROR, "Cannot draw the feature in this area because it don't fit in the grid").showAndWait();
 		}
 	}
 	/**
@@ -297,13 +292,13 @@ public class MainEditorController {
 			new Alert(AlertType.ERROR, "Select atleast one tile.").showAndWait();
 
 		} else {
-			for (Tile tile : clickedTileSet) {
-				if (!tile.getPointy()) {
-					continue;
-				} else {
-					new Alert(AlertType.ERROR, "The one selected is already pointy").showAndWait();
-				}
-			}
+//			for (Tile tile : clickedTileSet) {
+//				if (!tile.getPointy()) {
+//					continue;
+//				} else {
+//					new Alert(AlertType.ERROR, "The one selected is already pointy").showAndWait();
+//				}
+//			}
 
 			for (Tile tile : clickedTileSet) {
 				tile.setPointy(true);
