@@ -1,6 +1,6 @@
 # 3D Board Creator Version 1.0 Release Notes
-* about
-* what's New
+* About
+* What's New
 * Known Bugs
 
 # About
