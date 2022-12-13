@@ -14,3 +14,5 @@ As part of the ACE consulting group, we created a 3D RPG Terrain Editor software
 There is a small bug users should be aware of. If users want to add a feature and select multiple tiles, it won't allow them. We did this to avoid overlaps
 and to make sure that all of tiles part of the feature are within the grid. Therefore, users have to select a tile at a time in order to add a feature of their choice. This is not necessarily a bug but some users may want
 to select multiple tiles to add a feature but our app won't allow them to do so.
+
+Link to our presentation: https://docs.google.com/presentation/d/11586mV4ZZWMiXECIQIpQ2SMGeYvWDNFB-kWsOGWnQH0/edit#slide=id.g1b5e0949e67_2_10
