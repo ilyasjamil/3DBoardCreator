@@ -503,6 +503,7 @@ public class MainEditorController {
 	void openFileAction(ActionEvent event) throws JsonSyntaxException, JsonIOException, IOException {
 		Grid grid = file.openFile(event);
 		App.setGrid(grid);
+		clickedTileSet.clear();
 		drawGrid();
 	}
 
